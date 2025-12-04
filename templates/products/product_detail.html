@@ -5,234 +5,286 @@
 {% block content %}
 <div class="max-w-6xl mx-auto">
     <!-- Botón volver -->
-    <div class="mb-4">
-        <a href="{% url 'product_list' %}" class="text-purple-600 hover:text-purple-800 flex items-center">
+    <div class="mb-8">
+        <a href="{% url 'product_list' %}" class="flex items-center text-base transition-colors" style="color: var(--soft-gray);"
+           onmouseover="this.style.color='var(--dark-brown)'"
+           onmouseout="this.style.color='var(--soft-gray)'">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
             </svg>
             Volver al catálogo
         </a>
     </div>
 
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <!-- Header con imagen -->
-        <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-6 text-white">
+    <!-- Header del Producto -->
+    <div class="minimal-card overflow-hidden mb-8">
+        <div class="p-12" style="background-color: var(--ivory);">
             <div class="flex items-start justify-between">
                 <div class="flex-1">
-                    <h1 class="text-3xl font-bold mb-2">{{ product.name }}</h1>
-                    <p class="text-xl opacity-90">{{ product.brand }}</p>
+                    <p class="text-xs mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                        {{ product.brand }}
+                    </p>
+                    <h1 class="editorial-title mb-4" style="color: var(--dark-brown);">
+                        {{ product.name }}
+                    </h1>
+                    <p class="text-base max-w-2xl" style="color: var(--soft-gray); letter-spacing: 0.3px;">
+                        {{ product.description }}
+                    </p>
                 </div>
+
+                <!-- Imagen o Ícono -->
                 {% if product.image %}
-                <div class="ml-6">
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-32 h-32 object-cover rounded-lg shadow-xl border-4 border-white">
+                <div class="ml-12">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-48 h-48 object-cover rounded">
                 </div>
                 {% else %}
-                <div class="ml-6 w-32 h-32 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
-                    <span class="text-5xl font-bold">{{ product.name|slice:":2"|upper }}</span>
+                <div class="ml-12 w-48 h-48 flex items-center justify-center rounded" style="background-color: white; border: 1px solid var(--beige);">
+                    <svg class="w-24 h-24" style="color: var(--beige);" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 3h6v2h2a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h2V3zm6 4H9v1h6V7zm-6 3v8h6v-8H9z"/>
+                    </svg>
                 </div>
                 {% endif %}
             </div>
         </div>
+    </div>
 
-        <!-- Contenido principal -->
-        <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Columna Izquierda -->
+    <!-- Grid de Información -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Columna Izquierda: Información General -->
+        <div class="space-y-8">
+            <!-- Categorización -->
+            <div class="minimal-card p-8">
+                <h2 class="serif text-2xl mb-8" style="color: var(--dark-brown); font-weight: 400; letter-spacing: 1px;">
+                    Categorización
+                </h2>
+
                 <div class="space-y-6">
-                    <!-- Información Básica -->
-                    <div class="bg-blue-50 p-5 rounded-lg border border-blue-200">
-                        <h2 class="text-xl font-bold text-blue-900 mb-4 flex items-center">
-                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            Información General
-                        </h2>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="text-sm font-semibold text-gray-600">Descripción</label>
-                                <p class="text-gray-800 mt-1">{{ product.description }}</p>
-                            </div>
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="text-sm font-semibold text-gray-600">SKU</label>
-                                    <p class="text-gray-800 font-mono">{{ product.sku }}</p>
-                                </div>
-                                {% if product.barcode %}
-                                <div>
-                                    <label class="text-sm font-semibold text-gray-600">Código de Barras</label>
-                                    <p class="text-gray-800 font-mono">{{ product.barcode }}</p>
-                                </div>
-                                {% endif %}
-                            </div>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                                Categoría
+                            </p>
+                            <span class="inline-block px-3 py-1 rounded text-sm" style="background-color: var(--beige); color: var(--soft-brown);">
+                                {{ product.get_category_display }}
+                            </span>
+                        </div>
+                        <div>
+                            <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                                Género
+                            </p>
+                            <span class="inline-block px-3 py-1 rounded text-sm" style="background-color: var(--beige); color: var(--soft-brown);">
+                                {% if product.gender == 'M' %}Masculino
+                                {% elif product.gender == 'F' %}Femenino
+                                {% else %}Unisex{% endif %}
+                            </span>
                         </div>
                     </div>
 
-                    <!-- Categorización -->
-                    <div class="bg-purple-50 p-5 rounded-lg border border-purple-200">
-                        <h2 class="text-xl font-bold text-purple-900 mb-4 flex items-center">
-                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-                            </svg>
-                            Categorización
-                        </h2>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-sm font-semibold text-gray-600">Categoría</label>
-                                <p class="text-gray-800">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
-                                        {{ product.get_category_display }}
-                                    </span>
-                                </p>
-                            </div>
-                            <div>
-                                <label class="text-sm font-semibold text-gray-600">Género</label>
-                                <p class="text-gray-800">
-                                    {% if product.gender == 'M' %}
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">Masculino</span>
-                                    {% elif product.gender == 'F' %}
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-pink-100 text-pink-800">Femenino</span>
-                                    {% else %}
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">Unisex</span>
-                                    {% endif %}
-                                </p>
-                            </div>
-                            {% if product.fragrance_type %}
-                            <div class="col-span-2">
-                                <label class="text-sm font-semibold text-gray-600">Tipo de Fragancia</label>
-                                <p class="text-gray-800">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-                                        {{ product.get_fragrance_type_display }}
-                                    </span>
-                                </p>
-                            </div>
-                            {% endif %}
-                            <div>
-                                <label class="text-sm font-semibold text-gray-600">Volumen</label>
-                                <p class="text-gray-800 text-lg font-bold">{{ product.volume }} ml</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Proveedor -->
-                    {% if product.supplier %}
-                    <div class="bg-yellow-50 p-5 rounded-lg border border-yellow-200">
-                        <h2 class="text-xl font-bold text-yellow-900 mb-2 flex items-center">
-                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                            </svg>
-                            Proveedor
-                        </h2>
-                        <p class="text-gray-800">{{ product.supplier }}</p>
-                    </div>
-                    {% endif %}
-                </div>
-
-                <!-- Columna Derecha -->
-                <div class="space-y-6">
-                    <!-- Precios e Inventario -->
-                    <div class="bg-green-50 p-5 rounded-lg border border-green-200">
-                        <h2 class="text-xl font-bold text-green-900 mb-4 flex items-center">
-                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            Precios e Inventario
-                        </h2>
-                        <div class="space-y-4">
-                            <div class="flex justify-between items-center p-4 bg-white rounded-lg shadow">
-                                <div>
-                                    <label class="text-sm font-semibold text-gray-600">Precio de Venta</label>
-                                    <p class="text-3xl font-bold text-green-600">${{ product.price }}</p>
-                                </div>
-                            </div>
-
-                            {% if product.cost > 0 %}
-                            <div class="flex justify-between items-center p-4 bg-white rounded-lg shadow">
-                                <div>
-                                    <label class="text-sm font-semibold text-gray-600">Costo de Adquisición</label>
-                                    <p class="text-2xl font-bold text-orange-600">${{ product.cost }}</p>
-                                </div>
-                            </div>
-
-                            <div class="p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow">
-                                <label class="text-sm font-semibold">Margen de Ganancia</label>
-                                <p class="text-2xl font-bold">{{ product.profit_margin|floatformat:2 }}%</p>
-                                <p class="text-sm opacity-90">Ganancia: ${{ product.price|add:"-"|add:product.cost|floatformat:2 }}</p>
-                            </div>
-                            {% endif %}
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="p-4 bg-white rounded-lg shadow">
-                                    <label class="text-sm font-semibold text-gray-600">Stock Actual</label>
-                                    {% if product.is_low_stock %}
-                                    <p class="text-2xl font-bold text-red-600">{{ product.quantity }}</p>
-                                    <p class="text-xs text-red-500 font-semibold mt-1">STOCK BAJO</p>
-                                    {% else %}
-                                    <p class="text-2xl font-bold text-gray-800">{{ product.quantity }}</p>
-                                    {% endif %}
-                                </div>
-                                <div class="p-4 bg-white rounded-lg shadow">
-                                    <label class="text-sm font-semibold text-gray-600">Stock Mínimo</label>
-                                    <p class="text-2xl font-bold text-gray-800">{{ product.min_stock }}</p>
-                                </div>
-                            </div>
-
-                            {% if product.is_low_stock %}
-                            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
-                                <div class="flex">
-                                    <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                                    </svg>
-                                    <div>
-                                        <p class="font-bold">Alerta de Stock Bajo</p>
-                                        <p class="text-sm">El stock está en o por debajo del mínimo. Considere realizar un pedido.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Fecha de Vencimiento -->
-                    {% if product.expiration_date %}
-                    <div class="bg-pink-50 p-5 rounded-lg border border-pink-200">
-                        <h2 class="text-xl font-bold text-pink-900 mb-2 flex items-center">
-                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                            Fecha de Vencimiento
-                        </h2>
-                        <p class="text-gray-800 text-lg">{{ product.expiration_date|date:"d/m/Y" }}</p>
+                    {% if product.fragrance_type %}
+                    <div>
+                        <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                            Tipo de Fragancia
+                        </p>
+                        <span class="inline-block px-3 py-1 rounded text-sm" style="background-color: var(--ivory); color: var(--dark-brown); border: 1px solid var(--beige);">
+                            {{ product.get_fragrance_type_display }}
+                        </span>
                     </div>
                     {% endif %}
 
-                    <!-- Metadatos -->
-                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
-                        <h2 class="text-xl font-bold text-gray-900 mb-2 flex items-center">
-                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            Información del Sistema
-                        </h2>
-                        <div class="space-y-2 text-sm text-gray-600">
-                            <p><span class="font-semibold">Creado:</span> {{ product.created_at|date:"d/m/Y H:i" }}</p>
-                            <p><span class="font-semibold">Última actualización:</span> {{ product.updated_at|date:"d/m/Y H:i" }}</p>
-                        </div>
+                    <div>
+                        <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                            Volumen
+                        </p>
+                        <p class="serif text-2xl" style="color: var(--dark-brown); font-weight: 500;">
+                            {{ product.volume }} ml
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <!-- Botones de acción -->
-            <div class="mt-8 flex space-x-4">
-                <a href="{% url 'product_edit' product.pk %}"
-                   class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-md font-medium text-center">
-                    Editar Producto
-                </a>
-                <a href="{% url 'product_delete' product.pk %}"
-                   class="flex-1 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-md font-medium text-center">
-                    Eliminar Producto
-                </a>
+            <!-- Identificadores -->
+            <div class="minimal-card p-8">
+                <h2 class="serif text-2xl mb-8" style="color: var(--dark-brown); font-weight: 400; letter-spacing: 1px;">
+                    Identificadores
+                </h2>
+
+                <div class="space-y-6">
+                    <div>
+                        <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                            SKU
+                        </p>
+                        <p class="text-base font-mono" style="color: var(--dark-brown);">
+                            {{ product.sku }}
+                        </p>
+                    </div>
+
+                    {% if product.barcode %}
+                    <div>
+                        <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                            Código de Barras
+                        </p>
+                        <p class="text-base font-mono" style="color: var(--dark-brown);">
+                            {{ product.barcode }}
+                        </p>
+                    </div>
+                    {% endif %}
+
+                    {% if product.supplier %}
+                    <div>
+                        <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                            Proveedor
+                        </p>
+                        <p class="text-base" style="color: var(--dark-brown);">
+                            {{ product.supplier }}
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
+
+        <!-- Columna Derecha: Precios e Inventario -->
+        <div class="space-y-8">
+            <!-- Precios -->
+            <div class="minimal-card p-8" style="background-color: var(--ivory);">
+                <h2 class="serif text-2xl mb-8" style="color: var(--dark-brown); font-weight: 400; letter-spacing: 1px;">
+                    Precios e Inventario
+                </h2>
+
+                <div class="space-y-6">
+                    <!-- Precio de Venta -->
+                    <div class="p-6 rounded" style="background-color: white; border: 1px solid var(--beige);">
+                        <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1px; text-transform: uppercase;">
+                            Precio de Venta
+                        </p>
+                        <p class="serif" style="color: var(--gold-accent); font-size: 3rem; font-weight: 500; line-height: 1;">
+                            ${{ product.price }}
+                        </p>
+                    </div>
+
+                    <!-- Costo y Margen -->
+                    {% if product.cost > 0 %}
+                    <div class="p-6 rounded" style="background-color: white; border: 1px solid var(--beige);">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-xs mb-1" style="color: var(--soft-gray); letter-spacing: 1px; text-transform: uppercase;">
+                                    Costo
+                                </p>
+                                <p class="serif text-2xl" style="color: var(--soft-brown); font-weight: 500;">
+                                    ${{ product.cost }}
+                                </p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs mb-1" style="color: var(--soft-gray); letter-spacing: 1px; text-transform: uppercase;">
+                                    Margen
+                                </p>
+                                <p class="serif text-2xl" style="color: var(--dark-brown); font-weight: 500;">
+                                    {{ product.profit_margin|floatformat:2 }}%
+                                </p>
+                            </div>
+                        </div>
+                        <p class="text-sm" style="color: var(--soft-gray);">
+                            Ganancia por unidad: ${{ product.price|add:"-"|add:product.cost|floatformat:2 }}
+                        </p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Stock -->
+                    <div class="p-6 rounded" style="background-color: white; border: 1px solid var(--beige);">
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1px; text-transform: uppercase;">
+                                    Stock Actual
+                                </p>
+                                <p class="serif text-3xl" style="color: {% if product.is_low_stock %}#DC2626{% else %}var(--dark-brown){% endif %}; font-weight: 500;">
+                                    {{ product.quantity }}
+                                </p>
+                                {% if product.is_low_stock %}
+                                <p class="text-xs mt-1" style="color: #DC2626; letter-spacing: 0.5px;">
+                                    STOCK BAJO
+                                </p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1px; text-transform: uppercase;">
+                                    Stock Mínimo
+                                </p>
+                                <p class="serif text-3xl" style="color: var(--dark-brown); font-weight: 500;">
+                                    {{ product.min_stock }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alerta de Stock Bajo -->
+                    {% if product.is_low_stock %}
+                    <div class="p-4 rounded" style="background-color: rgba(220, 38, 38, 0.05); border: 1px solid rgba(220, 38, 38, 0.2);">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 mr-3 flex-shrink-0" style="color: #DC2626;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                            <div>
+                                <p class="text-sm font-medium mb-1" style="color: #DC2626;">
+                                    Alerta de Stock Bajo
+                                </p>
+                                <p class="text-xs" style="color: var(--soft-gray);">
+                                    El stock está en o por debajo del mínimo. Considere realizar un pedido.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Información Adicional -->
+            <div class="minimal-card p-8">
+                <h2 class="serif text-2xl mb-8" style="color: var(--dark-brown); font-weight: 400; letter-spacing: 1px;">
+                    Información Adicional
+                </h2>
+
+                <div class="space-y-6">
+                    {% if product.expiration_date %}
+                    <div>
+                        <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                            Fecha de Vencimiento
+                        </p>
+                        <p class="text-lg" style="color: var(--dark-brown);">
+                            {{ product.expiration_date|date:"d/m/Y" }}
+                        </p>
+                    </div>
+                    {% endif %}
+
+                    <div class="pt-6" style="border-top: 1px solid var(--beige);">
+                        <p class="text-xs mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                            Metadatos del Sistema
+                        </p>
+                        <div class="space-y-2 text-sm" style="color: var(--soft-gray);">
+                            <p>
+                                <span class="font-medium">Creado:</span> {{ product.created_at|date:"d/m/Y H:i" }}
+                            </p>
+                            <p>
+                                <span class="font-medium">Última actualización:</span> {{ product.updated_at|date:"d/m/Y H:i" }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="flex flex-col md:flex-row gap-4">
+        <a href="{% url 'product_edit' product.pk %}"
+           class="minimal-btn flex-1 px-6 py-4 rounded text-center text-lg"
+           style="background-color: var(--soft-brown); color: white;">
+            Editar Producto
+        </a>
+        <a href="{% url 'product_delete' product.pk %}"
+           class="minimal-btn flex-1 px-6 py-4 rounded text-center text-lg"
+           style="background-color: var(--ivory); color: #DC2626; border: 1px solid rgba(220, 38, 38, 0.3);">
+            Eliminar Producto
+        </a>
     </div>
 </div>
 {% endblock %}
