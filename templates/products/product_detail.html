@@ -1,56 +1,238 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ product.name }}{% endblock %}
+{% block title %}{{ product.name }} - {{ product.brand }}{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
-    <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ product.name }}</h1>
-        <p class="text-sm text-gray-500">SKU: {{ product.sku }}</p>
+<div class="max-w-6xl mx-auto">
+    <!-- Botón volver -->
+    <div class="mb-4">
+        <a href="{% url 'product_list' %}" class="text-purple-600 hover:text-purple-800 flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Volver al catálogo
+        </a>
     </div>
 
-    <div class="space-y-4 mb-6">
-        <div>
-            <h2 class="text-sm font-medium text-gray-500 uppercase">Descripcion</h2>
-            <p class="mt-1 text-gray-900">{{ product.description }}</p>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <h2 class="text-sm font-medium text-gray-500 uppercase">Precio</h2>
-                <p class="mt-1 text-2xl font-bold text-blue-600">${{ product.price }}</p>
-            </div>
-            <div>
-                <h2 class="text-sm font-medium text-gray-500 uppercase">Cantidad Disponible</h2>
-                <p class="mt-1 text-2xl font-bold text-gray-900">{{ product.quantity }}</p>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <h2 class="text-sm font-medium text-gray-500 uppercase">Fecha de Creacion</h2>
-                <p class="mt-1 text-gray-900">{{ product.created_at|date:"d/m/Y H:i" }}</p>
-            </div>
-            <div>
-                <h2 class="text-sm font-medium text-gray-500 uppercase">Ultima Actualizacion</h2>
-                <p class="mt-1 text-gray-900">{{ product.updated_at|date:"d/m/Y H:i" }}</p>
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <!-- Header con imagen -->
+        <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-6 text-white">
+            <div class="flex items-start justify-between">
+                <div class="flex-1">
+                    <h1 class="text-3xl font-bold mb-2">{{ product.name }}</h1>
+                    <p class="text-xl opacity-90">{{ product.brand }}</p>
+                </div>
+                {% if product.image %}
+                <div class="ml-6">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-32 h-32 object-cover rounded-lg shadow-xl border-4 border-white">
+                </div>
+                {% else %}
+                <div class="ml-6 w-32 h-32 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                    <span class="text-5xl font-bold">{{ product.name|slice:":2"|upper }}</span>
+                </div>
+                {% endif %}
             </div>
         </div>
-    </div>
 
-    <div class="flex space-x-4">
-        <a href="{% url 'product_list' %}"
-           class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md font-medium text-center">
-            Volver
-        </a>
-        <a href="{% url 'product_edit' product.pk %}"
-           class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md font-medium text-center">
-            Editar
-        </a>
-        <a href="{% url 'product_delete' product.pk %}"
-           class="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md font-medium text-center">
-            Eliminar
-        </a>
+        <!-- Contenido principal -->
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Columna Izquierda -->
+                <div class="space-y-6">
+                    <!-- Información Básica -->
+                    <div class="bg-blue-50 p-5 rounded-lg border border-blue-200">
+                        <h2 class="text-xl font-bold text-blue-900 mb-4 flex items-center">
+                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Información General
+                        </h2>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-sm font-semibold text-gray-600">Descripción</label>
+                                <p class="text-gray-800 mt-1">{{ product.description }}</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="text-sm font-semibold text-gray-600">SKU</label>
+                                    <p class="text-gray-800 font-mono">{{ product.sku }}</p>
+                                </div>
+                                {% if product.barcode %}
+                                <div>
+                                    <label class="text-sm font-semibold text-gray-600">Código de Barras</label>
+                                    <p class="text-gray-800 font-mono">{{ product.barcode }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Categorización -->
+                    <div class="bg-purple-50 p-5 rounded-lg border border-purple-200">
+                        <h2 class="text-xl font-bold text-purple-900 mb-4 flex items-center">
+                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                            </svg>
+                            Categorización
+                        </h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-sm font-semibold text-gray-600">Categoría</label>
+                                <p class="text-gray-800">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                                        {{ product.get_category_display }}
+                                    </span>
+                                </p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-semibold text-gray-600">Género</label>
+                                <p class="text-gray-800">
+                                    {% if product.gender == 'M' %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">Masculino</span>
+                                    {% elif product.gender == 'F' %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-pink-100 text-pink-800">Femenino</span>
+                                    {% else %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">Unisex</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            {% if product.fragrance_type %}
+                            <div class="col-span-2">
+                                <label class="text-sm font-semibold text-gray-600">Tipo de Fragancia</label>
+                                <p class="text-gray-800">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                                        {{ product.get_fragrance_type_display }}
+                                    </span>
+                                </p>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <label class="text-sm font-semibold text-gray-600">Volumen</label>
+                                <p class="text-gray-800 text-lg font-bold">{{ product.volume }} ml</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Proveedor -->
+                    {% if product.supplier %}
+                    <div class="bg-yellow-50 p-5 rounded-lg border border-yellow-200">
+                        <h2 class="text-xl font-bold text-yellow-900 mb-2 flex items-center">
+                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                            Proveedor
+                        </h2>
+                        <p class="text-gray-800">{{ product.supplier }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Columna Derecha -->
+                <div class="space-y-6">
+                    <!-- Precios e Inventario -->
+                    <div class="bg-green-50 p-5 rounded-lg border border-green-200">
+                        <h2 class="text-xl font-bold text-green-900 mb-4 flex items-center">
+                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Precios e Inventario
+                        </h2>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center p-4 bg-white rounded-lg shadow">
+                                <div>
+                                    <label class="text-sm font-semibold text-gray-600">Precio de Venta</label>
+                                    <p class="text-3xl font-bold text-green-600">${{ product.price }}</p>
+                                </div>
+                            </div>
+
+                            {% if product.cost > 0 %}
+                            <div class="flex justify-between items-center p-4 bg-white rounded-lg shadow">
+                                <div>
+                                    <label class="text-sm font-semibold text-gray-600">Costo de Adquisición</label>
+                                    <p class="text-2xl font-bold text-orange-600">${{ product.cost }}</p>
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow">
+                                <label class="text-sm font-semibold">Margen de Ganancia</label>
+                                <p class="text-2xl font-bold">{{ product.profit_margin|floatformat:2 }}%</p>
+                                <p class="text-sm opacity-90">Ganancia: ${{ product.price|add:"-"|add:product.cost|floatformat:2 }}</p>
+                            </div>
+                            {% endif %}
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-4 bg-white rounded-lg shadow">
+                                    <label class="text-sm font-semibold text-gray-600">Stock Actual</label>
+                                    {% if product.is_low_stock %}
+                                    <p class="text-2xl font-bold text-red-600">{{ product.quantity }}</p>
+                                    <p class="text-xs text-red-500 font-semibold mt-1">STOCK BAJO</p>
+                                    {% else %}
+                                    <p class="text-2xl font-bold text-gray-800">{{ product.quantity }}</p>
+                                    {% endif %}
+                                </div>
+                                <div class="p-4 bg-white rounded-lg shadow">
+                                    <label class="text-sm font-semibold text-gray-600">Stock Mínimo</label>
+                                    <p class="text-2xl font-bold text-gray-800">{{ product.min_stock }}</p>
+                                </div>
+                            </div>
+
+                            {% if product.is_low_stock %}
+                            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
+                                <div class="flex">
+                                    <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                    </svg>
+                                    <div>
+                                        <p class="font-bold">Alerta de Stock Bajo</p>
+                                        <p class="text-sm">El stock está en o por debajo del mínimo. Considere realizar un pedido.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Fecha de Vencimiento -->
+                    {% if product.expiration_date %}
+                    <div class="bg-pink-50 p-5 rounded-lg border border-pink-200">
+                        <h2 class="text-xl font-bold text-pink-900 mb-2 flex items-center">
+                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            Fecha de Vencimiento
+                        </h2>
+                        <p class="text-gray-800 text-lg">{{ product.expiration_date|date:"d/m/Y" }}</p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Metadatos -->
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-900 mb-2 flex items-center">
+                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Información del Sistema
+                        </h2>
+                        <div class="space-y-2 text-sm text-gray-600">
+                            <p><span class="font-semibold">Creado:</span> {{ product.created_at|date:"d/m/Y H:i" }}</p>
+                            <p><span class="font-semibold">Última actualización:</span> {{ product.updated_at|date:"d/m/Y H:i" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="mt-8 flex space-x-4">
+                <a href="{% url 'product_edit' product.pk %}"
+                   class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-md font-medium text-center">
+                    Editar Producto
+                </a>
+                <a href="{% url 'product_delete' product.pk %}"
+                   class="flex-1 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-md font-medium text-center">
+                    Eliminar Producto
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

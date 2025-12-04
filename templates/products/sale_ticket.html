@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Ticket de Venta #{{ sale.ticket_number }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <!-- Header del Ticket -->
+        <div class="bg-gradient-to-r from-green-600 to-blue-600 text-white p-8 text-center">
+            <h1 class="text-4xl font-bold mb-2">Ticket de Venta</h1>
+            <p class="text-2xl font-mono">{{ sale.ticket_number }}</p>
+        </div>
+
+        <!-- Información de la Venta -->
+        <div class="p-8">
+            <div class="grid grid-cols-2 gap-6 mb-8 pb-6 border-b border-gray-200">
+                <div>
+                    <p class="text-sm text-gray-600">Fecha de Venta</p>
+                    <p class="text-lg font-semibold text-gray-900">{{ sale.created_at|date:"d/m/Y H:i" }}</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Vendedor</p>
+                    <p class="text-lg font-semibold text-gray-900">{{ sale.user.username }}</p>
+                </div>
+            </div>
+
+            <!-- Items de la Venta -->
+            <h2 class="text-xl font-bold text-gray-900 mb-4">Productos Vendidos</h2>
+            <div class="space-y-3 mb-8">
+                {% for item in sale.items.all %}
+                <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-gray-900">{{ item.product_name }}</h3>
+                        <p class="text-sm text-gray-600">{{ item.product_brand }}</p>
+                        <p class="text-xs text-gray-500">SKU: {{ item.product_sku }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-600">{{ item.quantity }} x ${{ item.unit_price }}</p>
+                        <p class="text-lg font-bold text-gray-900">${{ item.subtotal }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Total -->
+            <div class="bg-gradient-to-r from-green-100 to-blue-100 rounded-lg p-6 border-2 border-green-300">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-900">Total</h2>
+                    <p class="text-4xl font-bold text-green-600">${{ sale.total }}</p>
+                </div>
+                <p class="text-sm text-gray-600 mt-2">Total de artículos: {{ sale.get_items_count }}</p>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="mt-8 flex space-x-4">
+                <button onclick="window.print()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium">
+                    Imprimir Ticket
+                </button>
+                <a href="{% url 'sale_list' %}" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-3 rounded-md font-medium text-center">
+                    Ver Todas las Ventas
+                </a>
+                <a href="{% url 'product_list' %}" class="flex-1 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md font-medium text-center">
+                    Nueva Venta
+                </a>
+            </div>
+
+            <!-- Mensaje de Agradecimiento -->
+            <div class="mt-8 text-center p-4 bg-purple-50 rounded-lg border border-purple-200">
+                <p class="text-lg font-semibold text-purple-900">¡Gracias por su compra!</p>
+                <p class="text-sm text-purple-700 mt-1">Perfumería - Sistema de Gestión</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Estilos para impresión -->
+<style media="print">
+    nav, .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+    }
+
+    .max-w-4xl {
+        max-width: 100%;
+    }
+
+    button, a[href] {
+        display: none !important;
+    }
+</style>
+{% endblock %}

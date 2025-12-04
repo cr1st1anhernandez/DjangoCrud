@@ -18,4 +18,17 @@ urlpatterns = [
 
     path('history/', views.history_list, name='history_list'),
     path('history/<int:pk>/', views.history_detail, name='history_detail'),
+
+    # Carrito de compras
+    path('cart/', views.cart_view, name='cart_view'),
+    path('cart/add/<int:pk>/', views.cart_add, name='cart_add'),
+    path('cart/remove/<int:pk>/', views.cart_remove, name='cart_remove'),
+    path('cart/update/<int:pk>/', views.cart_update_quantity, name='cart_update_quantity'),
+    path('cart/clear/', views.cart_clear, name='cart_clear'),
+
+    # Ventas
+    path('sales/', views.sale_list, name='sale_list'),
+    path('sales/<int:pk>/', views.sale_detail, name='sale_detail'),
+    path('sales/process/', views.sale_process, name='sale_process'),
+    path('sales/ticket/<int:pk>/', views.sale_ticket, name='sale_ticket'),
 ]
