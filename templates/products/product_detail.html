@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ product.name }}</h1>
+        <p class="text-sm text-gray-500">SKU: {{ product.sku }}</p>
+    </div>
+
+    <div class="space-y-4 mb-6">
+        <div>
+            <h2 class="text-sm font-medium text-gray-500 uppercase">Descripcion</h2>
+            <p class="mt-1 text-gray-900">{{ product.description }}</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <h2 class="text-sm font-medium text-gray-500 uppercase">Precio</h2>
+                <p class="mt-1 text-2xl font-bold text-blue-600">${{ product.price }}</p>
+            </div>
+            <div>
+                <h2 class="text-sm font-medium text-gray-500 uppercase">Cantidad Disponible</h2>
+                <p class="mt-1 text-2xl font-bold text-gray-900">{{ product.quantity }}</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <h2 class="text-sm font-medium text-gray-500 uppercase">Fecha de Creacion</h2>
+                <p class="mt-1 text-gray-900">{{ product.created_at|date:"d/m/Y H:i" }}</p>
+            </div>
+            <div>
+                <h2 class="text-sm font-medium text-gray-500 uppercase">Ultima Actualizacion</h2>
+                <p class="mt-1 text-gray-900">{{ product.updated_at|date:"d/m/Y H:i" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex space-x-4">
+        <a href="{% url 'product_list' %}"
+           class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md font-medium text-center">
+            Volver
+        </a>
+        <a href="{% url 'product_edit' product.pk %}"
+           class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md font-medium text-center">
+            Editar
+        </a>
+        <a href="{% url 'product_delete' product.pk %}"
+           class="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md font-medium text-center">
+            Eliminar
+        </a>
+    </div>
+</div>
+{% endblock %}
