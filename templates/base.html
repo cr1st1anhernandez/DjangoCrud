@@ -3,118 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Sistema de Gestion de Productos{% endblock %}</title>
+    <title>{% block title %}Parfums Élégance{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --cream: #FAF7F2;
+            --beige: #E8DCC4;
+            --ivory: #F5F1E8;
+            --soft-brown: #8B7355;
+            --dark-brown: #5C4A3A;
+            --gold-accent: #C9A961;
+            --soft-gray: #6B6B6B;
+            --charcoal: #3D3D3D;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: var(--charcoal);
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .editorial-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+
+        .minimal-btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 0.875rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .minimal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(92, 74, 58, 0.15);
+        }
+
+        .minimal-card {
+            background: white;
+            border-radius: 2px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(232, 220, 196, 0.3);
+        }
+
+        .minimal-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(92, 74, 58, 0.12);
+            border-color: var(--gold-accent);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .text-balance {
+            text-wrap: balance;
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            color: var(--dark-brown);
+            font-size: 0.875rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 1px;
+            background: var(--gold-accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--gold-accent);
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .notification-enter {
+            animation: slideInRight 0.4s ease-out;
+        }
+
+        .notification-exit {
+            animation: slideOutRight 0.3s ease-in;
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
+<body class="min-h-screen">
     {% if user.is_authenticated %}
-    <nav class="bg-blue-600 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex space-x-4">
-                    <a href="{% url 'product_list' %}" class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">
-                        Productos
-                    </a>
-                    <a href="{% url 'sale_list' %}" class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">
-                        Ventas
-                    </a>
-                    <a href="{% url 'history_list' %}" class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">
-                        Historial
-                    </a>
+    <!-- Navbar Minimalista -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50" style="border-color: var(--beige);">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex justify-between items-center py-6">
+                <!-- Logo -->
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, var(--beige) 0%, var(--gold-accent) 100%);">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="serif text-2xl" style="color: var(--dark-brown); letter-spacing: 2px; font-weight: 300;">Parfums Élégance</h1>
+                        <p class="text-xs" style="color: var(--soft-gray); letter-spacing: 2px;">COLLECTION PREMIUM</p>
+                    </div>
+                </div>
+
+                <!-- Menu Principal -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="{% url 'product_list' %}" class="nav-link">Catálogo</a>
+                    <a href="{% url 'sale_list' %}" class="nav-link">Ventas</a>
+                    <a href="{% url 'history_list' %}" class="nav-link">Historial</a>
                     {% if user.profile.is_admin %}
-                    <a href="{% url 'user_list' %}" class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">
-                        Usuarios
-                    </a>
+                    <a href="{% url 'user_list' %}" class="nav-link">Usuarios</a>
                     {% endif %}
                 </div>
-                <div class="flex items-center space-x-4">
-                    <a href="{% url 'cart_view' %}" class="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium flex items-center">
-                        <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                        </svg>
-                        Carrito
-                        {% if request.session.cart %}
-                        <span class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">{{ request.session.cart|length }}</span>
-                        {% endif %}
+
+                <!-- User Area -->
+                <div class="flex items-center space-x-6">
+                    <!-- Carrito -->
+                    <a href="{% url 'cart_view' %}" class="relative group">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all" style="background-color: var(--ivory);">
+                            <svg class="w-5 h-5" style="color: var(--dark-brown);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                            </svg>
+                            {% if request.session.cart %}
+                            <span class="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium text-white" style="background-color: var(--soft-brown);">
+                                {{ request.session.cart|length }}
+                            </span>
+                            {% endif %}
+                        </div>
                     </a>
-                    <span class="text-white text-sm">
-                        {{ user.username }}
-                        {% if user.profile.is_admin %}
-                        <span class="bg-yellow-500 text-xs px-2 py-1 rounded-full ml-2">Admin</span>
-                        {% endif %}
-                    </span>
-                    <a href="{% url 'logout' %}" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium">
-                        Cerrar Sesion
-                    </a>
+
+                    <!-- User Info -->
+                    <div class="flex items-center space-x-3">
+                        <div class="text-right">
+                            <p class="text-sm font-medium" style="color: var(--dark-brown);">{{ user.username }}</p>
+                            <p class="text-xs" style="color: var(--soft-gray);">
+                                {% if user.profile.is_admin %}Administrador{% else %}Usuario{% endif %}
+                            </p>
+                        </div>
+                        <a href="{% url 'logout' %}" class="minimal-btn px-4 py-2 rounded" style="background-color: var(--dark-brown); color: white;">
+                            Salir
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
     {% endif %}
 
-    <!-- Notificaciones Flotantes -->
+    <!-- Notificaciones Minimalistas -->
     {% if messages %}
-    <div id="notifications-container" class="fixed top-4 right-4 z-50 space-y-2">
+    <div id="notifications-container" class="fixed top-24 right-8 z-50 space-y-3 max-w-md">
         {% for message in messages %}
-        <div class="notification-alert animate-slide-in border-l-4 {% if message.tags == 'error' %}bg-red-50 border-red-500 text-red-800{% elif message.tags == 'success' %}bg-green-50 border-green-500 text-green-800{% else %}bg-blue-50 border-blue-500 text-blue-800{% endif %} px-6 py-4 rounded-lg shadow-lg flex items-center justify-between min-w-80 max-w-md">
-            <span class="font-medium">{{ message }}</span>
-            <button onclick="this.parentElement.remove()" class="ml-4 {% if message.tags == 'error' %}text-red-600 hover:text-red-800{% elif message.tags == 'success' %}text-green-600 hover:text-green-800{% else %}text-blue-600 hover:text-blue-800{% endif %}">
-                <span class="text-xl font-bold">&times;</span>
-            </button>
+        <div class="notification-enter minimal-card overflow-hidden shadow-lg">
+            <div class="flex items-start p-5 {% if message.tags == 'error' %}bg-red-50{% elif message.tags == 'success' %}bg-green-50{% elif message.tags == 'warning' %}bg-yellow-50{% else %}bg-blue-50{% endif %}">
+                <div class="flex-shrink-0 mr-4">
+                    {% if message.tags == 'error' %}
+                    <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </div>
+                    {% elif message.tags == 'success' %}
+                    <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    {% else %}
+                    <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="flex-1">
+                    <p class="text-sm font-medium {% if message.tags == 'error' %}text-red-800{% elif message.tags == 'success' %}text-green-800{% else %}text-blue-800{% endif %}">
+                        {{ message }}
+                    </p>
+                </div>
+                <button onclick="this.closest('.notification-enter').classList.add('notification-exit'); setTimeout(() => this.closest('.notification-enter').remove(), 300)" class="ml-4 {% if message.tags == 'error' %}text-red-400 hover:text-red-600{% elif message.tags == 'success' %}text-green-400 hover:text-green-600{% else %}text-blue-400 hover:text-blue-600{% endif %}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
         </div>
         {% endfor %}
     </div>
     {% endif %}
 
-    <main class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-8 py-16 fade-in">
         {% block content %}
         {% endblock %}
     </main>
 
-    <style>
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideOut {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-        }
-
-        .animate-slide-in {
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .animate-slide-out {
-            animation: slideOut 0.3s ease-in;
-        }
-    </style>
+    <!-- Footer Minimalista -->
+    {% if user.is_authenticated %}
+    <footer class="mt-24 border-t py-12" style="border-color: var(--beige); background-color: var(--ivory);">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-3 mb-4">
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, var(--beige) 0%, var(--gold-accent) 100%);">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z"/>
+                        </svg>
+                    </div>
+                    <h3 class="serif text-xl" style="color: var(--dark-brown); letter-spacing: 2px;">Parfums Élégance</h3>
+                </div>
+                <p class="text-sm mb-2" style="color: var(--soft-gray); letter-spacing: 1px;">Sistema de Gestión Premium</p>
+                <p class="text-xs" style="color: var(--soft-gray);">© 2025 Parfums Élégance · Fragancias de Alta Gama</p>
+            </div>
+        </div>
+    </footer>
+    {% endif %}
 
     <script>
-        // Auto-dismiss notifications after 4 seconds
+        // Auto-dismiss notifications
         setTimeout(function() {
-            const notifications = document.querySelectorAll('.notification-alert');
+            const notifications = document.querySelectorAll('.notification-enter');
             notifications.forEach(function(notification) {
-                notification.classList.remove('animate-slide-in');
-                notification.classList.add('animate-slide-out');
+                notification.classList.add('notification-exit');
                 setTimeout(function() {
                     notification.remove();
                 }, 300);
             });
-        }, 4000);
+        }, 5000);
     </script>
 </body>
 </html>
