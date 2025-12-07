@@ -1,42 +1,278 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Rubi perfumeria</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-{% block title %}Iniciar Sesion{% endblock %}
+    <style>
+        :root {
+            --cream: #FAF7F2;
+            --beige: #E8DCC4;
+            --ivory: #EAE0CC;
+            --soft-brown: #8B7355;
+            --dark-brown: #5C4A3A;
+            --gold-accent: #C9A961;
+            --soft-gray: #6B6B6B;
+            --charcoal: #3D3D3D;
+        }
 
-{% block content %}
-<div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
-        <div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                Iniciar Sesion
-            </h2>
-            <p class="mt-2 text-center text-sm text-gray-600">
-                Sistema de Gestion de Productos
-            </p>
-        </div>
-        <form class="mt-8 space-y-6" method="POST">
-            {% csrf_token %}
-            <div class="rounded-md shadow-sm space-y-4">
-                <div>
-                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
-                    <input id="username" name="username" type="text" required
-                           class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                           placeholder="Nombre de usuario">
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: var(--charcoal);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .minimal-btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .minimal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(92, 74, 58, 0.15);
+        }
+
+        .minimal-card {
+            background: white;
+            border-radius: 2px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(232, 220, 196, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .input-field {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid var(--beige);
+            background-color: white;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.1);
+        }
+
+        .input-field::placeholder {
+            color: var(--soft-gray);
+            opacity: 0.5;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .notification-enter {
+            animation: slideInRight 0.4s ease-out;
+        }
+
+        .notification-exit {
+            animation: slideOutRight 0.3s ease-in;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <!-- Notificaciones -->
+    {% if messages %}
+    <div id="notifications-container" class="fixed top-8 right-8 z-50 space-y-3 max-w-md">
+        {% for message in messages %}
+        <div class="notification-enter minimal-card overflow-hidden shadow-lg">
+            <div class="flex items-start p-5 {% if message.tags == 'error' %}bg-red-50{% elif message.tags == 'success' %}bg-green-50{% elif message.tags == 'warning' %}bg-yellow-50{% else %}bg-blue-50{% endif %}">
+                <div class="flex-shrink-0 mr-4">
+                    {% if message.tags == 'error' %}
+                    <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </div>
+                    {% elif message.tags == 'success' %}
+                    <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    {% else %}
+                    <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    {% endif %}
                 </div>
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contrasena</label>
-                    <input id="password" name="password" type="password" required
-                           class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                           placeholder="Contrasena">
+                <div class="flex-1">
+                    <p class="text-sm font-medium {% if message.tags == 'error' %}text-red-800{% elif message.tags == 'success' %}text-green-800{% else %}text-blue-800{% endif %}">
+                        {{ message }}
+                    </p>
                 </div>
-            </div>
-
-            <div>
-                <button type="submit"
-                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Iniciar Sesion
+                <button onclick="this.closest('.notification-enter').classList.add('notification-exit'); setTimeout(() => this.closest('.notification-enter').remove(), 300)" class="ml-4 {% if message.tags == 'error' %}text-red-400 hover:text-red-600{% elif message.tags == 'success' %}text-green-400 hover:text-green-600{% else %}text-blue-400 hover:text-blue-600{% endif %}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
                 </button>
             </div>
-        </form>
+        </div>
+        {% endfor %}
     </div>
-</div>
-{% endblock %}
+    {% endif %}
+
+    <!-- Login Container -->
+    <div class="max-w-md w-full fade-in">
+        <!-- Logo y Header -->
+        <div class="text-center mb-12">
+            <div class="flex justify-center mb-6">
+                <div class="w-20 h-20 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, var(--beige) 0%, var(--gold-accent) 100%);">
+                    <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z"/>
+                    </svg>
+                </div>
+            </div>
+            <h1 class="serif text-4xl mb-3" style="color: var(--dark-brown); letter-spacing: 2px; font-weight: 600;">
+                Rubi perfumeria
+            </h1>
+            <p class="text-sm" style="color: var(--soft-gray); letter-spacing: 2px; text-transform: uppercase; font-weight: 600;">
+                Sistema de Gestión Premium
+            </p>
+        </div>
+
+        <!-- Login Card -->
+        <div class="minimal-card p-10 shadow-lg">
+            <div class="mb-8">
+                <h2 class="serif text-2xl text-center" style="color: var(--dark-brown); font-weight: 600; letter-spacing: 1px;">
+                    Iniciar Sesión
+                </h2>
+                <p class="text-center text-sm mt-2" style="color: var(--soft-gray);">
+                    Ingrese sus credenciales para continuar
+                </p>
+            </div>
+
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+
+                <!-- Usuario -->
+                <div>
+                    <label for="username" class="block mb-2" style="color: var(--dark-brown);">
+                        Usuario
+                    </label>
+                    <input
+                        id="username"
+                        name="username"
+                        type="text"
+                        required
+                        autocomplete="username"
+                        class="input-field w-full px-4 py-3 rounded text-base"
+                        style="color: var(--charcoal);"
+                        placeholder="Ingrese su usuario">
+                </div>
+
+                <!-- Contraseña -->
+                <div>
+                    <label for="password" class="block mb-2" style="color: var(--dark-brown);">
+                        Contraseña
+                    </label>
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        required
+                        autocomplete="current-password"
+                        class="input-field w-full px-4 py-3 rounded text-base"
+                        style="color: var(--charcoal);"
+                        placeholder="Ingrese su contraseña">
+                </div>
+
+                <!-- Botón Submit -->
+                <div class="pt-4">
+                    <button
+                        type="submit"
+                        class="minimal-btn w-full px-6 py-3 rounded text-center"
+                        style="background-color: var(--soft-brown); color: white;">
+                        Iniciar Sesión
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-8">
+            <p class="text-xs" style="color: var(--soft-gray); font-weight: 500;">
+                © 2025 Rubi perfumeria · Fragancias de Alta Gama
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-dismiss notifications
+        setTimeout(function() {
+            const notifications = document.querySelectorAll('.notification-enter');
+            notifications.forEach(function(notification) {
+                notification.classList.add('notification-exit');
+                setTimeout(function() {
+                    notification.remove();
+                }, 300);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>
