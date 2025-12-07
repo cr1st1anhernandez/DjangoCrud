@@ -244,18 +244,7 @@
                 </h2>
 
                 <div class="space-y-6">
-                    {% if product.expiration_date %}
-                    <div>
-                        <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
-                            Fecha de Vencimiento
-                        </p>
-                        <p class="text-lg" style="color: var(--dark-brown);">
-                            {{ product.expiration_date|date:"d/m/Y" }}
-                        </p>
-                    </div>
-                    {% endif %}
-
-                    <div class="pt-6" style="border-top: 1px solid var(--beige);">
+                    <div style="border-top: 1px solid var(--beige);">
                         <p class="text-xs mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
                             Metadatos del Sistema
                         </p>

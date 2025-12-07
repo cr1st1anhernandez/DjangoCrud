@@ -66,9 +66,6 @@ class Product(models.Model):
     # Imagen
     image = models.ImageField(upload_to='products/', verbose_name="Imagen", blank=True, null=True)
 
-    # Fecha de vencimiento
-    expiration_date = models.DateField(verbose_name="Fecha de Vencimiento", blank=True, null=True)
-
     # Metadatos
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
