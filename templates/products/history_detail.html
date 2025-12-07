@@ -24,7 +24,7 @@
 
     <!-- Información General -->
     <div class="minimal-card p-8 mb-8">
-        <h2 class="serif text-2xl mb-8" style="color: var(--dark-brown); font-weight: 400; letter-spacing: 1px;">
+        <h2 class="serif text-2xl mb-8" style="color: var(--dark-brown); font-weight: 600; letter-spacing: 1px;">
             Información General
         </h2>
 
@@ -88,13 +88,13 @@
 
     <!-- Detalles de los Cambios -->
     <div class="minimal-card p-8">
-        <h2 class="serif text-2xl mb-8" style="color: var(--dark-brown); font-weight: 400; letter-spacing: 1px;">
+        <h2 class="serif text-2xl mb-8" style="color: var(--dark-brown); font-weight: 600; letter-spacing: 1px;">
             Detalles de los Cambios
         </h2>
 
         {% if history.action == 'CREATE' %}
         <div class="p-6 rounded" style="background-color: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.2);">
-            <h3 class="serif text-lg mb-6" style="color: #16a34a; font-weight: 400;">
+            <h3 class="serif text-lg mb-6" style="color: #16a34a; font-weight: 600;">
                 Datos del Producto Creado
             </h3>
             <dl class="space-y-4">
@@ -120,7 +120,7 @@
             {% if changes %}
                 {% for key, value in changes.items %}
                 <div class="p-6 rounded" style="background-color: rgba(234, 179, 8, 0.05); border: 1px solid rgba(234, 179, 8, 0.2);">
-                    <h3 class="serif text-lg mb-6" style="color: #ca8a04; font-weight: 400;">
+                    <h3 class="serif text-lg mb-6" style="color: #ca8a04; font-weight: 600;">
                         {% if key == 'name' %}Nombre
                         {% elif key == 'description' %}Descripción
                         {% elif key == 'price' %}Precio
@@ -158,7 +158,7 @@
 
         {% elif history.action == 'DELETE' %}
         <div class="p-6 rounded" style="background-color: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2);">
-            <h3 class="serif text-lg mb-6" style="color: #dc2626; font-weight: 400;">
+            <h3 class="serif text-lg mb-6" style="color: #dc2626; font-weight: 600;">
                 Datos del Producto Eliminado
             </h3>
             <dl class="space-y-4">
