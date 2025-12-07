@@ -127,14 +127,13 @@ class History(models.Model):
 
 class UserProfile(models.Model):
     ROLE_CHOICES = [
-        ('USER', 'Usuario'),
         ('SELLER', 'Vendedor'),
         ('ADMIN', 'Administrador'),
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     is_admin = models.BooleanField(default=False, verbose_name="Es Administrador")
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='USER', verbose_name="Rol")
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='SELLER', verbose_name="Rol")
 
     class Meta:
         verbose_name = "Perfil de Usuario"
