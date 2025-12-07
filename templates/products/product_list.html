@@ -1,162 +1,302 @@
 {% extends 'base.html' %}
 
-{% block title %}Lista de Productos{% endblock %}
+{% block title %}Collection{% endblock %}
 
 {% block content %}
-<div class="bg-white rounded-lg shadow-md p-6">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Productos</h1>
-        <a href="{% url 'product_create' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
-            Crear Producto
+<!-- Header Editorial -->
+<div class="mb-16">
+    <div class="flex justify-between items-start">
+        <div>
+            <h1 class="editorial-title mb-3" style="color: var(--dark-brown);">Nuestra Colección</h1>
+            <p class="text-base" style="color: var(--soft-gray); letter-spacing: 0.5px;">Descubre fragancias excepcionales cuidadosamente seleccionadas</p>
+        </div>
+        <a href="{% url 'product_create' %}" class="minimal-btn px-6 py-3 rounded" style="background-color: var(--dark-brown); color: white;">
+            Nuevo Producto
         </a>
     </div>
+</div>
 
-    <!-- Buscador y Filtros -->
-    <div class="mb-6 bg-gray-50 p-4 rounded-lg">
-        <form method="GET" class="space-y-4">
-            <!-- Buscador -->
+<!-- Filtros Minimalistas -->
+<div class="mb-16 p-8 rounded" style="background-color: var(--ivory); border: 1px solid var(--beige);">
+    <form method="GET" class="space-y-8">
+        <!-- Buscador Principal -->
+        <div>
+            <input type="text" name="search" id="search" value="{{ request.GET.search }}"
+                   placeholder="Buscar fragancia, marca o código..."
+                   class="w-full px-6 py-4 rounded border text-base"
+                   style="border-color: var(--beige); background-color: white; color: var(--charcoal); letter-spacing: 0.3px;"
+                   onfocus="this.style.borderColor='var(--gold-accent)'"
+                   onblur="this.style.borderColor='var(--beige)'">
+        </div>
+
+        <!-- Grid de Filtros -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- Categoría -->
             <div>
-                <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
-                <input type="text" name="search" id="search" value="{{ request.GET.search }}"
-                       placeholder="Buscar por nombre, SKU o descripcion..."
-                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <label for="category" class="block text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">Categoría</label>
+                <select name="category" id="category" class="w-full px-4 py-3 rounded border text-sm" style="border-color: var(--beige); background-color: white; color: var(--charcoal);">
+                    <option value="">Todas las categorías</option>
+                    <option value="PERFUME" {% if request.GET.category == 'PERFUME' %}selected{% endif %}>Perfume</option>
+                    <option value="EDT" {% if request.GET.category == 'EDT' %}selected{% endif %}>Eau de Toilette</option>
+                    <option value="EDC" {% if request.GET.category == 'EDC' %}selected{% endif %}>Eau de Cologne</option>
+                    <option value="EDP" {% if request.GET.category == 'EDP' %}selected{% endif %}>Eau de Parfum</option>
+                    <option value="BODY_SPRAY" {% if request.GET.category == 'BODY_SPRAY' %}selected{% endif %}>Body Spray</option>
+                    <option value="LOTION" {% if request.GET.category == 'LOTION' %}selected{% endif %}>Loción</option>
+                    <option value="CREAM" {% if request.GET.category == 'CREAM' %}selected{% endif %}>Crema</option>
+                    <option value="GEL" {% if request.GET.category == 'GEL' %}selected{% endif %}>Gel</option>
+                    <option value="DEODORANT" {% if request.GET.category == 'DEODORANT' %}selected{% endif %}>Desodorante</option>
+                    <option value="OTHER" {% if request.GET.category == 'OTHER' %}selected{% endif %}>Otro</option>
+                </select>
             </div>
 
-            <!-- Filtros -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div>
-                    <label for="price_min" class="block text-sm font-medium text-gray-700 mb-1">Precio Min</label>
-                    <input type="number" name="price_min" id="price_min" step="0.01" value="{{ request.GET.price_min }}"
-                           placeholder="0.00"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
+            <!-- Género -->
+            <div>
+                <label for="gender" class="block text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">Género</label>
+                <select name="gender" id="gender" class="w-full px-4 py-3 rounded border text-sm" style="border-color: var(--beige); background-color: white; color: var(--charcoal);">
+                    <option value="">Todos</option>
+                    <option value="M" {% if request.GET.gender == 'M' %}selected{% endif %}>Masculino</option>
+                    <option value="F" {% if request.GET.gender == 'F' %}selected{% endif %}>Femenino</option>
+                    <option value="U" {% if request.GET.gender == 'U' %}selected{% endif %}>Unisex</option>
+                </select>
+            </div>
 
-                <div>
-                    <label for="price_max" class="block text-sm font-medium text-gray-700 mb-1">Precio Max</label>
-                    <input type="number" name="price_max" id="price_max" step="0.01" value="{{ request.GET.price_max }}"
-                           placeholder="999999.99"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
+            <!-- Tipo de Fragancia -->
+            <div>
+                <label for="fragrance" class="block text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">Fragancia</label>
+                <select name="fragrance" id="fragrance" class="w-full px-4 py-3 rounded border text-sm" style="border-color: var(--beige); background-color: white; color: var(--charcoal);">
+                    <option value="">Todas</option>
+                    <option value="FLORAL" {% if request.GET.fragrance == 'FLORAL' %}selected{% endif %}>Floral</option>
+                    <option value="ORIENTAL" {% if request.GET.fragrance == 'ORIENTAL' %}selected{% endif %}>Oriental</option>
+                    <option value="WOODY" {% if request.GET.fragrance == 'WOODY' %}selected{% endif %}>Amaderado</option>
+                    <option value="FRESH" {% if request.GET.fragrance == 'FRESH' %}selected{% endif %}>Fresco</option>
+                    <option value="CITRUS" {% if request.GET.fragrance == 'CITRUS' %}selected{% endif %}>Cítrico</option>
+                    <option value="FRUITY" {% if request.GET.fragrance == 'FRUITY' %}selected{% endif %}>Frutal</option>
+                    <option value="SPICY" {% if request.GET.fragrance == 'SPICY' %}selected{% endif %}>Especiado</option>
+                    <option value="AQUATIC" {% if request.GET.fragrance == 'AQUATIC' %}selected{% endif %}>Acuático</option>
+                    <option value="GOURMAND" {% if request.GET.fragrance == 'GOURMAND' %}selected{% endif %}>Gourmand</option>
+                    <option value="OTHER" {% if request.GET.fragrance == 'OTHER' %}selected{% endif %}>Otro</option>
+                </select>
+            </div>
 
-                <div>
-                    <label for="quantity_min" class="block text-sm font-medium text-gray-700 mb-1">Cantidad Min</label>
-                    <input type="number" name="quantity_min" id="quantity_min" value="{{ request.GET.quantity_min }}"
-                           placeholder="0"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
+            <!-- Ordenamiento -->
+            <div>
+                <label for="order_by" class="block text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">Ordenar</label>
+                <select name="order_by" id="order_by" class="w-full px-4 py-3 rounded border text-sm" style="border-color: var(--beige); background-color: white; color: var(--charcoal);">
+                    <option value="-created_at" {% if request.GET.order_by == '-created_at' or not request.GET.order_by %}selected{% endif %}>Más recientes</option>
+                    <option value="created_at" {% if request.GET.order_by == 'created_at' %}selected{% endif %}>Más antiguos</option>
+                    <option value="name" {% if request.GET.order_by == 'name' %}selected{% endif %}>Nombre (A-Z)</option>
+                    <option value="-name" {% if request.GET.order_by == '-name' %}selected{% endif %}>Nombre (Z-A)</option>
+                    <option value="brand" {% if request.GET.order_by == 'brand' %}selected{% endif %}>Marca (A-Z)</option>
+                    <option value="-brand" {% if request.GET.order_by == '-brand' %}selected{% endif %}>Marca (Z-A)</option>
+                    <option value="price" {% if request.GET.order_by == 'price' %}selected{% endif %}>Precio (menor)</option>
+                    <option value="-price" {% if request.GET.order_by == '-price' %}selected{% endif %}>Precio (mayor)</option>
+                    <option value="quantity" {% if request.GET.order_by == 'quantity' %}selected{% endif %}>Stock (menor)</option>
+                    <option value="-quantity" {% if request.GET.order_by == '-quantity' %}selected{% endif %}>Stock (mayor)</option>
+                </select>
+            </div>
+        </div>
 
-                <div>
-                    <label for="order_by" class="block text-sm font-medium text-gray-700 mb-1">Ordenar por</label>
-                    <select name="order_by" id="order_by" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="-created_at" {% if request.GET.order_by == '-created_at' or not request.GET.order_by %}selected{% endif %}>Mas recientes</option>
-                        <option value="created_at" {% if request.GET.order_by == 'created_at' %}selected{% endif %}>Mas antiguos</option>
-                        <option value="name" {% if request.GET.order_by == 'name' %}selected{% endif %}>Nombre (A-Z)</option>
-                        <option value="-name" {% if request.GET.order_by == '-name' %}selected{% endif %}>Nombre (Z-A)</option>
-                        <option value="price" {% if request.GET.order_by == 'price' %}selected{% endif %}>Precio (menor a mayor)</option>
-                        <option value="-price" {% if request.GET.order_by == '-price' %}selected{% endif %}>Precio (mayor a menor)</option>
-                        <option value="quantity" {% if request.GET.order_by == 'quantity' %}selected{% endif %}>Cantidad (menor a mayor)</option>
-                        <option value="-quantity" {% if request.GET.order_by == '-quantity' %}selected{% endif %}>Cantidad (mayor a menor)</option>
-                    </select>
+        <!-- Filtros de Precio -->
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+            <div>
+                <label for="price_min" class="block text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">Precio Mínimo</label>
+                <input type="number" name="price_min" id="price_min" step="0.01" value="{{ request.GET.price_min }}"
+                       placeholder="$0.00"
+                       class="w-full px-4 py-3 rounded border text-sm" style="border-color: var(--beige); background-color: white; color: var(--charcoal);">
+            </div>
+
+            <div>
+                <label for="price_max" class="block text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">Precio Máximo</label>
+                <input type="number" name="price_max" id="price_max" step="0.01" value="{{ request.GET.price_max }}"
+                       placeholder="$999999"
+                       class="w-full px-4 py-3 rounded border text-sm" style="border-color: var(--beige); background-color: white; color: var(--charcoal);">
+            </div>
+
+            <div>
+                <label for="quantity_min" class="block text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">Stock Mínimo</label>
+                <input type="number" name="quantity_min" id="quantity_min" value="{{ request.GET.quantity_min }}"
+                       placeholder="0"
+                       class="w-full px-4 py-3 rounded border text-sm" style="border-color: var(--beige); background-color: white; color: var(--charcoal);">
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">Stock Bajo</label>
+                <div class="flex items-center h-12">
+                    <input type="checkbox" name="low_stock" value="true" id="low_stock" {% if request.GET.low_stock == 'true' %}checked{% endif %}
+                           class="w-5 h-5 rounded" style="color: var(--gold-accent); border-color: var(--beige);">
+                    <label for="low_stock" class="ml-3 text-sm" style="color: var(--charcoal);">Solo stock bajo</label>
                 </div>
             </div>
 
-            <!-- Botones -->
-            <div class="flex space-x-2">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md text-sm font-medium">
-                    Aplicar Filtros
+            <div class="flex items-end">
+                <button type="submit" class="minimal-btn w-full px-6 py-3 rounded" style="background-color: var(--soft-brown); color: white;">
+                    Aplicar
                 </button>
-                <a href="{% url 'product_list' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded-md text-sm font-medium">
-                    Limpiar Filtros
-                </a>
             </div>
-        </form>
-    </div>
+        </div>
 
-    <!-- Tabla de Productos -->
-    <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Producto
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        SKU
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Descripcion
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Precio
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Cantidad
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Acciones
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                {% for product in products %}
-                <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-500">{{ product.sku }}</div>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="text-sm text-gray-900 max-w-xs truncate" title="{{ product.description }}">{{ product.description }}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-semibold text-blue-600">${{ product.price }}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">{{ product.quantity }}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div class="flex space-x-2">
-                            <a href="{% url 'product_detail' product.pk %}"
-                               class="text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">
-                                Ver
-                            </a>
-                            <a href="{% url 'product_edit' product.pk %}"
-                               class="text-yellow-600 hover:text-yellow-900 bg-yellow-100 hover:bg-yellow-200 px-3 py-1 rounded">
-                                Editar
-                            </a>
-                            <a href="{% url 'product_delete' product.pk %}"
-                               class="text-red-600 hover:text-red-900 bg-red-100 hover:bg-red-200 px-3 py-1 rounded">
-                                Eliminar
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" class="px-6 py-12 text-center">
-                        <p class="text-gray-500 text-lg mb-2">No se encontraron productos</p>
-                        {% if request.GET.search or request.GET.price_min or request.GET.price_max or request.GET.quantity_min %}
-                        <a href="{% url 'product_list' %}" class="text-blue-600 hover:underline">
-                            Limpiar filtros
-                        </a>
-                        {% else %}
-                        <a href="{% url 'product_create' %}" class="text-blue-600 hover:underline">
-                            Crear el primer producto
-                        </a>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+        <!-- Botón limpiar -->
+        {% if request.GET.search or request.GET.category or request.GET.gender or request.GET.fragrance or request.GET.price_min or request.GET.price_max or request.GET.quantity_min or request.GET.low_stock or request.GET.order_by %}
+        <div class="text-center">
+            <a href="{% url 'product_list' %}" class="text-sm" style="color: var(--soft-gray); letter-spacing: 0.5px; text-decoration: underline;">
+                Limpiar todos los filtros
+            </a>
+        </div>
+        {% endif %}
+    </form>
+</div>
 
-    <!-- Contador de resultados -->
-    {% if products %}
-    <div class="mt-4 text-sm text-gray-600">
-        Mostrando {{ products|length }} producto{{ products|length|pluralize }}
+<!-- Grid de Productos -->
+{% if products %}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+    {% for product in products %}
+    <div class="minimal-card overflow-hidden group">
+        <!-- Imagen/Icono del Producto -->
+        <div class="aspect-square flex items-center justify-center relative overflow-hidden" style="background-color: var(--ivory);">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+            {% else %}
+            <!-- Icono de botella de perfume -->
+            <svg class="w-24 h-24 transition-transform group-hover:scale-110" style="color: var(--beige);" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 3h6v2h2a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h2V3zm6 4H9v1h6V7zm-6 3v8h6v-8H9z"/>
+            </svg>
+            {% endif %}
+
+            <!-- Badge de Stock Bajo -->
+            {% if product.is_low_stock %}
+            <div class="absolute top-4 right-4 px-3 py-1 rounded text-xs font-medium" style="background-color: rgba(220, 38, 38, 0.9); color: white; letter-spacing: 0.5px;">
+                STOCK BAJO
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Contenido del Producto -->
+        <div class="p-8">
+            <!-- Marca y Género -->
+            <div class="flex items-center justify-between mb-3">
+                <p class="text-xs font-medium" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                    {{ product.brand }}
+                </p>
+                <span class="text-xs px-2 py-1 rounded" style="background-color: var(--beige); color: var(--soft-brown); letter-spacing: 0.5px;">
+                    {% if product.gender == 'M' %}Masculino
+                    {% elif product.gender == 'F' %}Femenino
+                    {% else %}Unisex{% endif %}
+                </span>
+            </div>
+
+            <!-- Nombre del Producto -->
+            <h3 class="serif text-2xl mb-2" style="color: var(--dark-brown); font-weight: 400; letter-spacing: 0.5px; line-height: 1.3;">
+                {{ product.name }}
+            </h3>
+
+            <!-- Categoría y Volumen -->
+            <div class="flex items-center space-x-3 mb-4">
+                <span class="text-xs" style="color: var(--soft-gray); letter-spacing: 0.5px;">
+                    {{ product.get_category_display }}
+                </span>
+                <span style="color: var(--beige);">•</span>
+                <span class="text-xs" style="color: var(--soft-gray); letter-spacing: 0.5px;">
+                    {{ product.volume }} ml
+                </span>
+            </div>
+
+            <!-- Precio y Stock -->
+            <div class="flex items-end justify-between mb-6 pt-4" style="border-top: 1px solid var(--beige);">
+                <div>
+                    <p class="text-xs mb-1" style="color: var(--soft-gray); letter-spacing: 1px; text-transform: uppercase;">Precio</p>
+                    <p class="serif text-3xl" style="color: var(--gold-accent); font-weight: 500;">
+                        ${{ product.price }}
+                    </p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs mb-1" style="color: var(--soft-gray); letter-spacing: 1px; text-transform: uppercase;">Stock</p>
+                    <p class="text-lg font-medium" style="color: {% if product.is_low_stock %}#DC2626{% else %}var(--soft-brown){% endif %};">
+                        {{ product.quantity }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="space-y-3">
+                <!-- Agregar al Carrito -->
+                <a href="{% url 'cart_add' product.pk %}"
+                   class="minimal-btn w-full px-6 py-3 rounded text-center flex items-center justify-center"
+                   style="background-color: var(--soft-brown); color: white;">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    Agregar al Carrito
+                </a>
+
+                <!-- Botones secundarios -->
+                <div class="grid grid-cols-3 gap-2">
+                    <a href="{% url 'product_detail' product.pk %}"
+                       class="minimal-btn px-3 py-2 rounded text-center text-xs"
+                       style="background-color: var(--ivory); color: var(--dark-brown); border-color: var(--beige);">
+                        Ver
+                    </a>
+                    <a href="{% url 'product_edit' product.pk %}"
+                       class="minimal-btn px-3 py-2 rounded text-center text-xs"
+                       style="background-color: var(--ivory); color: var(--dark-brown); border-color: var(--beige);">
+                        Editar
+                    </a>
+                    <a href="{% url 'product_delete' product.pk %}"
+                       class="minimal-btn px-3 py-2 rounded text-center text-xs"
+                       style="background-color: var(--ivory); color: #DC2626; border-color: var(--beige);">
+                        Eliminar
+                    </a>
+                </div>
+            </div>
+
+            <!-- SKU -->
+            <p class="text-xs mt-4 text-center font-mono" style="color: var(--soft-gray); letter-spacing: 0.5px;">
+                SKU: {{ product.sku }}
+            </p>
+        </div>
     </div>
+    {% endfor %}
+</div>
+
+<!-- Contador de Resultados -->
+<div class="mt-16 text-center">
+    <p class="text-sm" style="color: var(--soft-gray); letter-spacing: 0.5px;">
+        Mostrando {{ products|length }} producto{{ products|length|pluralize }} en la colección
+    </p>
+    {% if request.GET.low_stock == 'true' %}
+    <p class="text-xs mt-2" style="color: #DC2626; letter-spacing: 0.5px;">
+        Filtrando solo productos con stock bajo
+    </p>
     {% endif %}
 </div>
+
+{% else %}
+<!-- Estado Vacío -->
+<div class="text-center py-24">
+    <div class="mb-8">
+        <svg class="mx-auto w-24 h-24" style="color: var(--beige);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+        </svg>
+    </div>
+    <h3 class="serif text-2xl mb-4" style="color: var(--dark-brown); letter-spacing: 1px;">
+        No se encontraron productos
+    </h3>
+    <p class="text-base mb-8" style="color: var(--soft-gray); letter-spacing: 0.3px;">
+        {% if request.GET.search or request.GET.category or request.GET.gender or request.GET.fragrance or request.GET.price_min or request.GET.price_max or request.GET.quantity_min or request.GET.low_stock %}
+        Intenta ajustar los filtros para obtener diferentes resultados
+        {% else %}
+        Comienza agregando tu primera fragancia a la colección
+        {% endif %}
+    </p>
+    {% if request.GET.search or request.GET.category or request.GET.gender or request.GET.fragrance or request.GET.price_min or request.GET.price_max or request.GET.quantity_min or request.GET.low_stock %}
+    <a href="{% url 'product_list' %}" class="minimal-btn px-8 py-3 rounded" style="background-color: var(--soft-brown); color: white;">
+        Limpiar Filtros
+    </a>
+    {% else %}
+    <a href="{% url 'product_create' %}" class="minimal-btn px-8 py-3 rounded" style="background-color: var(--dark-brown); color: white;">
+        Crear Primer Producto
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+
 {% endblock %}

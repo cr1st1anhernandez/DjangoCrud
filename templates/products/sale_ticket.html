@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block title %}Ticket #{{ sale.ticket_number }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <!-- Ticket Container -->
+    <div class="minimal-card overflow-hidden" id="ticket">
+        <!-- Header del Ticket -->
+        <div class="text-center py-12 px-8" style="border-bottom: 2px solid var(--beige);">
+            <!-- Logo pequeño -->
+            <div class="flex justify-center mb-6">
+                <div class="w-16 h-16 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, var(--beige) 0%, var(--gold-accent) 100%);">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Nombre del negocio -->
+            <h1 class="serif mb-2" style="color: var(--dark-brown); font-size: 2.5rem; font-weight: 300; letter-spacing: 2px;">
+                Parfums Élégance
+            </h1>
+            <p class="text-xs mb-6" style="color: var(--soft-gray); letter-spacing: 2px; text-transform: uppercase;">
+                Collection Premium
+            </p>
+
+            <!-- Número de ticket -->
+            <div class="inline-block px-6 py-2 rounded" style="background-color: var(--ivory);">
+                <p class="text-xs mb-1" style="color: var(--soft-gray); letter-spacing: 1px;">Número de Ticket</p>
+                <p class="font-mono text-base font-medium" style="color: var(--dark-brown); letter-spacing: 1px;">
+                    {{ sale.ticket_number }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Información de la Venta -->
+        <div class="p-8" style="border-bottom: 1px solid var(--beige);">
+            <div class="grid grid-cols-2 gap-8">
+                <div>
+                    <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                        Fecha
+                    </p>
+                    <p class="text-base" style="color: var(--dark-brown);">
+                        {{ sale.created_at|date:"d/m/Y" }}
+                    </p>
+                    <p class="text-sm mt-1" style="color: var(--soft-gray);">
+                        {{ sale.created_at|date:"H:i" }}
+                    </p>
+                </div>
+                <div>
+                    <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                        Atendido por
+                    </p>
+                    <p class="text-base" style="color: var(--dark-brown);">
+                        {{ sale.user.username }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Items de la Venta -->
+        <div class="p-8" style="border-bottom: 2px solid var(--beige);">
+            <h2 class="serif text-xl mb-8" style="color: var(--dark-brown); font-weight: 400; letter-spacing: 1px;">
+                Productos
+            </h2>
+
+            <div class="space-y-6">
+                {% for item in sale.items.all %}
+                <div class="pb-6" style="border-bottom: 1px solid var(--ivory);">
+                    <!-- Nombre y Marca -->
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex-1">
+                            <p class="text-xs mb-1" style="color: var(--soft-gray); letter-spacing: 1px; text-transform: uppercase;">
+                                {{ item.product_brand }}
+                            </p>
+                            <h3 class="serif text-lg" style="color: var(--dark-brown); font-weight: 400; letter-spacing: 0.5px;">
+                                {{ item.product_name }}
+                            </h3>
+                            <p class="text-xs font-mono mt-1" style="color: var(--soft-gray);">
+                                {{ item.product_sku }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Cantidad y Precio -->
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-4">
+                            <div>
+                                <p class="text-xs" style="color: var(--soft-gray);">Cantidad</p>
+                                <p class="text-base" style="color: var(--dark-brown);">{{ item.quantity }}</p>
+                            </div>
+                            <span style="color: var(--beige);">×</span>
+                            <div>
+                                <p class="text-xs" style="color: var(--soft-gray);">Precio</p>
+                                <p class="text-base" style="color: var(--dark-brown);">${{ item.unit_price }}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs mb-1" style="color: var(--soft-gray); letter-spacing: 1px;">Subtotal</p>
+                            <p class="serif text-2xl" style="color: var(--soft-brown); font-weight: 500;">
+                                ${{ item.subtotal }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Total -->
+        <div class="p-8 text-center" style="background-color: var(--ivory);">
+            <div class="max-w-md mx-auto">
+                <div class="mb-4">
+                    <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                        Total de Artículos
+                    </p>
+                    <p class="text-base" style="color: var(--dark-brown);">
+                        {{ sale.get_items_count }} producto{{ sale.get_items_count|pluralize }}
+                    </p>
+                </div>
+
+                <div class="py-8" style="border-top: 2px solid var(--beige); border-bottom: 2px solid var(--beige);">
+                    <p class="text-xs mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                        Total
+                    </p>
+                    <p class="serif" style="color: var(--gold-accent); font-size: 4rem; font-weight: 500; line-height: 1;">
+                        ${{ sale.total }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensaje de Agradecimiento -->
+        <div class="text-center py-8 px-8" style="border-top: 1px solid var(--beige);">
+            <p class="serif text-xl mb-2" style="color: var(--dark-brown); letter-spacing: 1px;">
+                Gracias por su compra
+            </p>
+            <p class="text-xs" style="color: var(--soft-gray); letter-spacing: 0.5px;">
+                Esperamos volver a atenderle pronto
+            </p>
+        </div>
+
+        <!-- Botones de Acción (no visible al imprimir) -->
+        <div class="p-8 no-print space-y-3" style="border-top: 1px solid var(--beige); background-color: var(--cream);">
+            <button onclick="window.print()" class="minimal-btn w-full px-6 py-3 rounded text-center" style="background-color: var(--soft-brown); color: white;">
+                Imprimir Ticket
+            </button>
+            <div class="grid grid-cols-2 gap-3">
+                <a href="{% url 'sale_list' %}" class="minimal-btn px-6 py-3 rounded text-center" style="background-color: var(--ivory); color: var(--dark-brown); border: 1px solid var(--beige);">
+                    Ver Ventas
+                </a>
+                <a href="{% url 'product_list' %}" class="minimal-btn px-6 py-3 rounded text-center" style="background-color: var(--ivory); color: var(--dark-brown); border: 1px solid var(--beige);">
+                    Nueva Venta
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Estilos para impresión -->
+<style media="print">
+    /* Ocultar elementos de navegación */
+    nav, footer, .no-print {
+        display: none !important;
+    }
+
+    /* Fondo blanco para impresión */
+    body {
+        background: white !important;
+    }
+
+    /* Máximo ancho para impresión */
+    .max-w-3xl {
+        max-width: 100% !important;
+    }
+
+    /* Remover sombras y bordes para impresión limpia */
+    .minimal-card {
+        box-shadow: none !important;
+        border: 1px solid #E8DCC4 !important;
+    }
+
+    /* Asegurar que los colores se impriman */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Padding del ticket */
+    #ticket {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Tamaño de página */
+    @page {
+        margin: 1cm;
+        size: A4;
+    }
+}
+</style>
+
+{% endblock %}

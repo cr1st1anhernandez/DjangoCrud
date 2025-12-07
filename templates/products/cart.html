@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block title %}Carrito{% endblock %}
+
+{% block content %}
+<!-- Header Editorial -->
+<div class="mb-16">
+    <div class="flex justify-between items-start">
+        <div>
+            <h1 class="editorial-title mb-3" style="color: var(--dark-brown);">Tu Selección</h1>
+            <p class="text-base" style="color: var(--soft-gray); letter-spacing: 0.5px;">Revisa y confirma tus fragancias elegidas</p>
+        </div>
+        <a href="{% url 'product_list' %}" class="minimal-btn px-6 py-3 rounded flex items-center" style="background-color: var(--ivory); color: var(--dark-brown); border: 1px solid var(--beige);">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Continuar Explorando
+        </a>
+    </div>
+</div>
+
+{% if cart_items %}
+<!-- Items del Carrito -->
+<div class="space-y-8 mb-16">
+    {% for item in cart_items %}
+    <div class="minimal-card p-8 group">
+        <div class="flex items-start gap-8">
+            <!-- Imagen/Icono del Producto -->
+            <div class="w-32 h-32 flex-shrink-0 flex items-center justify-center rounded" style="background-color: var(--ivory);">
+                {% if item.product.image %}
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover rounded">
+                {% else %}
+                <svg class="w-16 h-16 transition-transform group-hover:scale-110" style="color: var(--beige);" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 3h6v2h2a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h2V3zm6 4H9v1h6V7zm-6 3v8h6v-8H9z"/>
+                </svg>
+                {% endif %}
+            </div>
+
+            <!-- Información del Producto -->
+            <div class="flex-1">
+                <!-- Marca -->
+                <p class="text-xs font-medium mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                    {{ item.product.brand }}
+                </p>
+
+                <!-- Nombre -->
+                <h3 class="serif text-2xl mb-2" style="color: var(--dark-brown); font-weight: 400; letter-spacing: 0.5px;">
+                    {{ item.product.name }}
+                </h3>
+
+                <!-- Detalles -->
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="text-xs" style="color: var(--soft-gray); letter-spacing: 0.5px;">
+                        {{ item.product.get_category_display }}
+                    </span>
+                    <span style="color: var(--beige);">•</span>
+                    <span class="text-xs" style="color: var(--soft-gray); letter-spacing: 0.5px;">
+                        {{ item.product.volume }} ml
+                    </span>
+                    <span style="color: var(--beige);">•</span>
+                    <span class="text-xs font-mono" style="color: var(--soft-gray);">
+                        {{ item.product.sku }}
+                    </span>
+                </div>
+
+                <!-- Precio Unitario -->
+                <p class="serif text-xl" style="color: var(--gold-accent); font-weight: 500;">
+                    ${{ item.product.price }} <span class="text-sm" style="color: var(--soft-gray); font-family: 'Inter', sans-serif; font-weight: 400;">c/u</span>
+                </p>
+            </div>
+
+            <!-- Cantidad y Acciones -->
+            <div class="flex flex-col items-end space-y-6">
+                <!-- Cantidad -->
+                <form method="POST" action="{% url 'cart_update_quantity' item.product.pk %}" class="flex flex-col items-end">
+                    {% csrf_token %}
+                    <label for="quantity-{{ item.product.pk }}" class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1px; text-transform: uppercase;">
+                        Cantidad
+                    </label>
+                    <div class="flex items-center space-x-2">
+                        <input type="number" name="quantity" id="quantity-{{ item.product.pk }}"
+                               value="{{ item.quantity }}" min="1" max="{{ item.product.quantity }}"
+                               class="w-20 px-3 py-2 border rounded text-center text-base"
+                               style="border-color: var(--beige); background-color: white; color: var(--charcoal);">
+                        <button type="submit" class="minimal-btn px-4 py-2 rounded text-xs" style="background-color: var(--soft-brown); color: white;">
+                            Actualizar
+                        </button>
+                    </div>
+                    <p class="text-xs mt-2" style="color: var(--soft-gray);">
+                        Disponible: {{ item.product.quantity }}
+                    </p>
+                </form>
+
+                <!-- Subtotal -->
+                <div class="text-right pt-6" style="border-top: 1px solid var(--beige);">
+                    <p class="text-xs mb-1" style="color: var(--soft-gray); letter-spacing: 1px; text-transform: uppercase;">
+                        Subtotal
+                    </p>
+                    <p class="serif text-3xl" style="color: var(--dark-brown); font-weight: 500;">
+                        ${{ item.subtotal }}
+                    </p>
+                </div>
+
+                <!-- Botón Eliminar -->
+                <a href="{% url 'cart_remove' item.product.pk %}"
+                   class="text-xs flex items-center transition-colors"
+                   style="color: var(--soft-gray); letter-spacing: 0.5px;"
+                   onmouseover="this.style.color='#DC2626'"
+                   onmouseout="this.style.color='var(--soft-gray)'"
+                   onclick="return confirm('¿Eliminar esta fragancia del carrito?')">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                    Eliminar
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Resumen y Acciones -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Resumen del Total -->
+    <div class="p-8 rounded" style="background-color: var(--ivory); border: 1px solid var(--beige);">
+        <div class="mb-6">
+            <p class="text-xs font-medium mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                Total de Items
+            </p>
+            <p class="text-lg" style="color: var(--dark-brown);">
+                {{ cart_items|length }} producto{{ cart_items|length|pluralize }}
+            </p>
+        </div>
+
+        <div class="pt-6" style="border-top: 1px solid var(--beige);">
+            <p class="text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                Total a Pagar
+            </p>
+            <p class="serif" style="color: var(--gold-accent); font-size: 3.5rem; font-weight: 500; line-height: 1;">
+                ${{ total }}
+            </p>
+        </div>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="flex flex-col justify-center space-y-4">
+        <a href="{% url 'sale_process' %}"
+           class="minimal-btn px-8 py-5 rounded text-center text-lg"
+           style="background-color: var(--soft-brown); color: white;">
+            Procesar Venta
+        </a>
+
+        <a href="{% url 'cart_clear' %}"
+           class="minimal-btn px-8 py-4 rounded text-center"
+           style="background-color: var(--ivory); color: var(--soft-gray); border: 1px solid var(--beige);"
+           onclick="return confirm('¿Vaciar todo el carrito?')">
+            Vaciar Carrito
+        </a>
+
+        <a href="{% url 'product_list' %}"
+           class="text-sm text-center"
+           style="color: var(--soft-gray); letter-spacing: 0.5px; text-decoration: underline;">
+            Continuar explorando la colección
+        </a>
+    </div>
+</div>
+
+{% else %}
+<!-- Carrito Vacío -->
+<div class="text-center py-24">
+    <div class="mb-8">
+        <svg class="mx-auto w-24 h-24" style="color: var(--beige);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+    </div>
+    <h2 class="serif text-2xl mb-4" style="color: var(--dark-brown); letter-spacing: 1px;">
+        Tu carrito está vacío
+    </h2>
+    <p class="text-base mb-8" style="color: var(--soft-gray); letter-spacing: 0.3px;">
+        Explora nuestra colección y encuentra la fragancia perfecta
+    </p>
+    <a href="{% url 'product_list' %}"
+       class="minimal-btn px-8 py-3 rounded"
+       style="background-color: var(--dark-brown); color: white;">
+        Explorar Colección
+    </a>
+</div>
+{% endif %}
+
+{% endblock %}

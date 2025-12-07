@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}Ventas{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="mb-16">
+    <div class="flex justify-between items-start">
+        <div>
+            <h1 class="editorial-title mb-3" style="color: var(--dark-brown);">Historial de Ventas</h1>
+            <p class="text-base" style="color: var(--soft-gray); letter-spacing: 0.5px;">Consulta todas las transacciones realizadas</p>
+        </div>
+        <div class="text-right">
+            <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">Total Vendido</p>
+            <p class="serif" style="color: var(--gold-accent); font-size: 2.5rem; font-weight: 500; line-height: 1;">
+                ${{ total_sales }}
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Filtros -->
+<div class="mb-16 p-8 rounded" style="background-color: var(--ivory); border: 1px solid var(--beige);">
+    <form method="GET" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label for="date_from" class="block text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                    Fecha Desde
+                </label>
+                <input type="date" name="date_from" id="date_from" value="{{ request.GET.date_from }}"
+                       class="w-full px-4 py-3 border rounded text-base"
+                       style="border-color: var(--beige); background-color: white; color: var(--charcoal);">
+            </div>
+            <div>
+                <label for="date_to" class="block text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                    Fecha Hasta
+                </label>
+                <input type="date" name="date_to" id="date_to" value="{{ request.GET.date_to }}"
+                       class="w-full px-4 py-3 border rounded text-base"
+                       style="border-color: var(--beige); background-color: white; color: var(--charcoal);">
+            </div>
+            {% if is_admin %}
+            <div>
+                <label for="user" class="block text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                    Usuario
+                </label>
+                <select name="user" id="user" class="w-full px-4 py-3 border rounded text-base"
+                        style="border-color: var(--beige); background-color: white; color: var(--charcoal);">
+                    <option value="">Todos los usuarios</option>
+                    {% for user in users %}
+                    <option value="{{ user.id }}" {% if request.GET.user == user.id|stringformat:"s" %}selected{% endif %}>
+                        {{ user.username }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+        </div>
+        <div class="flex space-x-3">
+            <button type="submit" class="minimal-btn px-6 py-3 rounded" style="background-color: var(--soft-brown); color: white;">
+                Aplicar Filtros
+            </button>
+            <a href="{% url 'sale_list' %}" class="minimal-btn px-6 py-3 rounded" style="background-color: var(--ivory); color: var(--dark-brown); border: 1px solid var(--beige);">
+                Limpiar
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Lista de Ventas -->
+{% if sales %}
+<div class="space-y-6">
+    {% for sale in sales %}
+    <div class="minimal-card p-8 group">
+        <div class="flex items-start justify-between">
+            <!-- Información de la Venta -->
+            <div class="flex-1">
+                <!-- Ticket Number -->
+                <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
+                    Número de Ticket
+                </p>
+                <h3 class="font-mono text-xl mb-4" style="color: var(--dark-brown); letter-spacing: 1px;">
+                    {{ sale.ticket_number }}
+                </h3>
+
+                <!-- Detalles -->
+                <div class="grid grid-cols-3 gap-8 mb-6">
+                    <div>
+                        <p class="text-xs mb-1" style="color: var(--soft-gray); letter-spacing: 1px; text-transform: uppercase;">
+                            Fecha
+                        </p>
+                        <p class="text-base" style="color: var(--dark-brown);">
+                            {{ sale.created_at|date:"d/m/Y" }}
+                        </p>
+                        <p class="text-sm" style="color: var(--soft-gray);">
+                            {{ sale.created_at|date:"H:i" }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-xs mb-1" style="color: var(--soft-gray); letter-spacing: 1px; text-transform: uppercase;">
+                            Vendedor
+                        </p>
+                        <p class="text-base" style="color: var(--dark-brown);">
+                            {{ sale.user.username }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-xs mb-1" style="color: var(--soft-gray); letter-spacing: 1px; text-transform: uppercase;">
+                            Items
+                        </p>
+                        <p class="text-base" style="color: var(--dark-brown);">
+                            {{ sale.get_items_count }} producto{{ sale.get_items_count|pluralize }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Total -->
+                <div class="pt-6" style="border-top: 1px solid var(--beige);">
+                    <p class="text-xs mb-2" style="color: var(--soft-gray); letter-spacing: 1px; text-transform: uppercase;">
+                        Total
+                    </p>
+                    <p class="serif text-3xl" style="color: var(--gold-accent); font-weight: 500;">
+                        ${{ sale.total }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="flex flex-col space-y-3 ml-8">
+                <a href="{% url 'sale_detail' sale.pk %}"
+                   class="minimal-btn px-6 py-3 rounded text-center whitespace-nowrap"
+                   style="background-color: var(--soft-brown); color: white;">
+                    Ver Detalle
+                </a>
+                <a href="{% url 'sale_ticket' sale.pk %}"
+                   class="minimal-btn px-6 py-3 rounded text-center whitespace-nowrap"
+                   style="background-color: var(--ivory); color: var(--dark-brown); border: 1px solid var(--beige);">
+                    Ver Ticket
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Contador -->
+<div class="mt-12 text-center">
+    <p class="text-sm" style="color: var(--soft-gray); letter-spacing: 0.5px;">
+        Mostrando {{ sales|length }} venta{{ sales|length|pluralize }}
+    </p>
+</div>
+
+{% else %}
+<!-- Estado Vacío -->
+<div class="text-center py-24">
+    <div class="mb-8">
+        <svg class="mx-auto w-24 h-24" style="color: var(--beige);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+        </svg>
+    </div>
+    <h2 class="serif text-2xl mb-4" style="color: var(--dark-brown); letter-spacing: 1px;">
+        No se encontraron ventas
+    </h2>
+    <p class="text-base mb-8" style="color: var(--soft-gray); letter-spacing: 0.3px;">
+        {% if request.GET.date_from or request.GET.date_to or request.GET.user %}
+        Intenta ajustar los filtros para ver más resultados
+        {% else %}
+        Comienza realizando tu primera venta desde el catálogo
+        {% endif %}
+    </p>
+    {% if request.GET.date_from or request.GET.date_to or request.GET.user %}
+    <a href="{% url 'sale_list' %}" class="minimal-btn px-8 py-3 rounded" style="background-color: var(--soft-brown); color: white;">
+        Limpiar Filtros
+    </a>
+    {% else %}
+    <a href="{% url 'product_list' %}" class="minimal-btn px-8 py-3 rounded" style="background-color: var(--dark-brown); color: white;">
+        Ir al Catálogo
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}
