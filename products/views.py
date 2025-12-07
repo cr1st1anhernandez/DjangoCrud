@@ -155,7 +155,6 @@ def product_create(request):
         sku = request.POST.get('sku')
         barcode = request.POST.get('barcode', '')
         supplier = request.POST.get('supplier', '')
-        expiration_date = request.POST.get('expiration_date')
 
         product = Product.objects.create(
             name=name,
@@ -171,8 +170,7 @@ def product_create(request):
             min_stock=min_stock,
             sku=sku,
             barcode=barcode,
-            supplier=supplier,
-            expiration_date=expiration_date if expiration_date else None
+            supplier=supplier
         )
 
         # Manejo de imagen
@@ -199,8 +197,7 @@ def product_create(request):
                 'min_stock': min_stock,
                 'sku': sku,
                 'barcode': barcode,
-                'supplier': supplier,
-                'expiration_date': expiration_date if expiration_date else ''
+                'supplier': supplier
             })
         )
 
@@ -228,8 +225,7 @@ def product_edit(request, pk):
             'min_stock': product.min_stock,
             'sku': product.sku,
             'barcode': product.barcode,
-            'supplier': product.supplier,
-            'expiration_date': str(product.expiration_date) if product.expiration_date else ''
+            'supplier': product.supplier
         }
 
         product.name = request.POST.get('name')
@@ -246,8 +242,6 @@ def product_edit(request, pk):
         product.sku = request.POST.get('sku')
         product.barcode = request.POST.get('barcode', '')
         product.supplier = request.POST.get('supplier', '')
-        expiration_date = request.POST.get('expiration_date')
-        product.expiration_date = expiration_date if expiration_date else None
 
         # Manejo de imagen
         if 'image' in request.FILES:
@@ -269,8 +263,7 @@ def product_edit(request, pk):
             'min_stock': product.min_stock,
             'sku': product.sku,
             'barcode': product.barcode,
-            'supplier': product.supplier,
-            'expiration_date': str(product.expiration_date) if product.expiration_date else ''
+            'supplier': product.supplier
         }
 
         changes = {}
@@ -315,8 +308,7 @@ def product_delete(request, pk):
                 'min_stock': product.min_stock,
                 'sku': product.sku,
                 'barcode': product.barcode,
-                'supplier': product.supplier,
-                'expiration_date': str(product.expiration_date) if product.expiration_date else ''
+                'supplier': product.supplier
             })
         )
 

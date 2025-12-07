@@ -139,7 +139,6 @@ DjangoCrud/
 **Otros:**
 - supplier: Proveedor (opcional)
 - image: Imagen del producto (ImageField)
-- expiration_date: Fecha de vencimiento (opcional)
 - created_at: Fecha de creación
 - updated_at: Fecha de última actualización
 
