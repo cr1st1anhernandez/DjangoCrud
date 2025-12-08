@@ -158,7 +158,7 @@
                     <label for="volume" class="block text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">
                         Volumen (ml) <span style="color: #DC2626;">*</span>
                     </label>
-                    <input type="number" name="volume" id="volume" required
+                    <input type="number" name="volume" id="volume" required min="1"
                            value="{% if product %}{{ product.volume }}{% endif %}"
                            placeholder="100"
                            class="w-full px-4 py-3 border rounded text-base"
@@ -398,6 +398,45 @@ document.addEventListener('DOMContentLoaded', function() {
         if (hasErrors) {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+
+    // Prevenir entrada de números negativos en campos numéricos
+    const numericFields = ['volume', 'price', 'cost', 'quantity', 'min_stock'];
+
+    numericFields.forEach(function(fieldId) {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            // Prevenir teclas de signo negativo y 'e' (notación científica)
+            field.addEventListener('keydown', function(e) {
+                // Prevenir: signo menos (-), e, E, +, y signos negativos del teclado numérico
+                if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+') {
+                    e.preventDefault();
+                }
+            });
+
+            // Validar el valor cuando cambia
+            field.addEventListener('input', function(e) {
+                // Si el valor es negativo, establecerlo a 0
+                if (parseFloat(this.value) < 0) {
+                    this.value = 0;
+                }
+            });
+
+            // Validar al salir del campo
+            field.addEventListener('blur', function(e) {
+                const minValue = this.getAttribute('min');
+                const currentValue = parseFloat(this.value);
+
+                // Si está vacío o es menor al mínimo, establecer el mínimo
+                if (this.value === '' || isNaN(currentValue)) {
+                    if (this.hasAttribute('required')) {
+                        this.value = minValue || 0;
+                    }
+                } else if (minValue && currentValue < parseFloat(minValue)) {
+                    this.value = minValue;
+                }
+            });
         }
     });
 });

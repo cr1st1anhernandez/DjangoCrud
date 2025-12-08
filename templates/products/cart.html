@@ -187,4 +187,50 @@
 </div>
 {% endif %}
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Prevenir entrada de números negativos en campos de cantidad
+    const quantityInputs = document.querySelectorAll('input[type="number"][name="quantity"]');
+
+    quantityInputs.forEach(function(input) {
+        // Prevenir teclas de signo negativo y 'e' (notación científica)
+        input.addEventListener('keydown', function(e) {
+            if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+') {
+                e.preventDefault();
+            }
+        });
+
+        // Validar el valor cuando cambia
+        input.addEventListener('input', function(e) {
+            const value = parseFloat(this.value);
+            const min = parseFloat(this.getAttribute('min')) || 1;
+            const max = parseFloat(this.getAttribute('max'));
+
+            // Si el valor es negativo o menor al mínimo, establecer el mínimo
+            if (value < min || isNaN(value)) {
+                this.value = min;
+            }
+
+            // Si excede el máximo, establecer el máximo
+            if (max && value > max) {
+                this.value = max;
+            }
+        });
+
+        // Validar al salir del campo
+        input.addEventListener('blur', function(e) {
+            const min = parseFloat(this.getAttribute('min')) || 1;
+            const max = parseFloat(this.getAttribute('max'));
+            const value = parseFloat(this.value);
+
+            if (this.value === '' || isNaN(value) || value < min) {
+                this.value = min;
+            } else if (max && value > max) {
+                this.value = max;
+            }
+        });
+    });
+});
+</script>
+
 {% endblock %}
