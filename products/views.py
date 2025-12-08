@@ -146,7 +146,7 @@ def product_create(request):
         description = request.POST.get('description')
         category = request.POST.get('category')
         gender = request.POST.get('gender')
-        fragrance_type = request.POST.get('fragrance_type')
+        fragrance_type = request.POST.get('fragrance_type', '')
         volume = request.POST.get('volume')
         price = request.POST.get('price')
         cost = request.POST.get('cost', 0)
@@ -162,7 +162,7 @@ def product_create(request):
             description=description,
             category=category,
             gender=gender,
-            fragrance_type=fragrance_type,
+            fragrance_type=fragrance_type or '',
             volume=volume,
             price=price,
             cost=cost,
@@ -233,7 +233,7 @@ def product_edit(request, pk):
         product.description = request.POST.get('description')
         product.category = request.POST.get('category')
         product.gender = request.POST.get('gender')
-        product.fragrance_type = request.POST.get('fragrance_type')
+        product.fragrance_type = request.POST.get('fragrance_type', '') or ''
         product.volume = request.POST.get('volume')
         product.price = request.POST.get('price')
         product.cost = request.POST.get('cost', 0)

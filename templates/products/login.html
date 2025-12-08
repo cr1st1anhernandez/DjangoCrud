@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Rubi perfumeria</title>
+
+    <!-- Favicons -->
+    {% load static %}
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
+    <link rel="alternate icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/apple-touch-icon.png' %}">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -201,8 +208,9 @@
         <div class="text-center mb-12">
             <div class="flex justify-center mb-6">
                 <div class="w-20 h-20 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, var(--beige) 0%, var(--gold-accent) 100%);">
-                    <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z"/>
+                    <svg class="w-11 h-11 text-white" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 7h6m-6 4h6m-6 4h6M6 19h12a2 2 0 002-2V9a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2zM8 3h8v4H8V3z"/>
+                        <ellipse cx="12" cy="13" rx="1.5" ry="3" opacity="0.6"/>
                     </svg>
                 </div>
             </div>
