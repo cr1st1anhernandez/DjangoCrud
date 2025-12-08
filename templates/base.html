@@ -8,170 +8,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-    <style>
-        :root {
-            --cream: #FAF7F2;
-            --beige: #E8DCC4;
-            --ivory: #EAE0CC;
-            --soft-brown: #8B7355;
-            --dark-brown: #5C4A3A;
-            --gold-accent: #C9A961;
-            --soft-gray: #6B6B6B;
-            --charcoal: #3D3D3D;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--cream);
-            color: var(--charcoal);
-            font-weight: 500;
-            letter-spacing: 0.3px;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        .serif {
-            font-family: 'Cormorant Garamond', serif;
-        }
-
-        .editorial-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 500;
-            font-size: 2.5rem;
-            letter-spacing: 2px;
-            line-height: 1.2;
-        }
-
-        .minimal-btn {
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            font-size: 0.875rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-        }
-
-        .minimal-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(92, 74, 58, 0.15);
-        }
-
-        .minimal-card {
-            background: white;
-            border-radius: 2px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(232, 220, 196, 0.3);
-        }
-
-        .minimal-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(92, 74, 58, 0.12);
-            border-color: var(--gold-accent);
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .text-balance {
-            text-wrap: balance;
-        }
-
-        .nav-link {
-            position: relative;
-            padding: 8px 16px;
-            color: var(--dark-brown);
-            font-size: 0.875rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: color 0.3s ease;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 1px;
-            background: var(--gold-accent);
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:hover {
-            color: var(--gold-accent);
-        }
-
-        .nav-link:hover::after {
-            width: 80%;
-        }
-
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideOutRight {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-        }
-
-        .notification-enter {
-            animation: slideInRight 0.4s ease-out;
-        }
-
-        .notification-exit {
-            animation: slideOutRight 0.3s ease-in;
-        }
-    </style>
+    {% block extra_styles %}{% endblock %}
 </head>
 <body class="min-h-screen">
     {% if user.is_authenticated %}
     <!-- Navbar Minimalista -->
-    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50" style="border-color: var(--beige);">
+    <nav class="bg-white border-b border-beige sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-8">
             <div class="flex justify-between items-center py-6">
                 <!-- Logo -->
                 <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, var(--beige) 0%, var(--gold-accent) 100%);">
+                    <div class="avatar avatar-md avatar-gradient">
                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z"/>
                         </svg>
                     </div>
                     <div>
-                        <h1 class="serif text-2xl" style="color: var(--dark-brown); letter-spacing: 2px; font-weight: 600;">Rubi perfumeria</h1>
-                        <p class="text-xs" style="color: var(--soft-gray); letter-spacing: 2px;">PERFUMERIA PREMIUM</p>
+                        <h1 class="serif text-2xl color-primary" style="letter-spacing: 2px; font-weight: 600;">Rubi perfumeria</h1>
+                        <p class="text-xs color-secondary" style="letter-spacing: 2px;">PERFUMERIA PREMIUM</p>
                     </div>
                 </div>
 
@@ -189,12 +46,12 @@
                 <div class="flex items-center space-x-6">
                     <!-- Carrito -->
                     <a href="{% url 'cart_view' %}" class="relative group">
-                        <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all" style="background-color: var(--ivory);">
-                            <svg class="w-5 h-5" style="color: var(--dark-brown);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all bg-ivory">
+                            <svg class="w-5 h-5 color-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                             </svg>
                             {% if request.session.cart %}
-                            <span class="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium text-white" style="background-color: var(--soft-brown);">
+                            <span class="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium text-white btn-primary">
                                 {{ request.session.cart|length }}
                             </span>
                             {% endif %}
@@ -204,12 +61,12 @@
                     <!-- User Info -->
                     <div class="flex items-center space-x-3">
                         <div class="text-right">
-                            <p class="text-sm font-medium" style="color: var(--dark-brown);">{{ user.username }}</p>
-                            <p class="text-xs" style="color: var(--soft-gray);">
+                            <p class="text-sm font-medium color-primary">{{ user.username }}</p>
+                            <p class="text-xs color-secondary">
                                 {% if user.profile.is_admin %}Administrador{% else %}Usuario{% endif %}
                             </p>
                         </div>
-                        <a href="{% url 'logout' %}" class="minimal-btn px-4 py-2 rounded" style="background-color: var(--dark-brown); color: white;">
+                        <a href="{% url 'logout' %}" class="minimal-btn btn-primary px-6 py-3 rounded">
                             Salir
                         </a>
                     </div>
@@ -270,19 +127,19 @@
 
     <!-- Footer Minimalista -->
     {% if user.is_authenticated %}
-    <footer class="mt-24 border-t py-12" style="border-color: var(--beige); background-color: var(--ivory);">
+    <footer class="mt-24 border-t border-beige py-12 bg-ivory">
         <div class="max-w-7xl mx-auto px-8">
             <div class="text-center">
                 <div class="flex items-center justify-center space-x-3 mb-4">
-                    <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, var(--beige) 0%, var(--gold-accent) 100%);">
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center avatar-gradient">
                         <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z"/>
                         </svg>
                     </div>
-                    <h3 class="serif text-xl" style="color: var(--dark-brown); letter-spacing: 2px; font-weight: 600;">Rubi perfumeria</h3>
+                    <h3 class="serif text-xl color-primary" style="letter-spacing: 2px; font-weight: 600;">Rubi perfumeria</h3>
                 </div>
-                <p class="text-sm mb-2" style="color: var(--soft-gray); letter-spacing: 1px; font-weight: 600;">Sistema de Gestión Premium</p>
-                <p class="text-xs" style="color: var(--soft-gray); font-weight: 500;">© 2025 Rubi perfumeria · Fragancias de Alta Gama</p>
+                <p class="text-sm mb-2 color-secondary" style="letter-spacing: 1px; font-weight: 600;">Sistema de Gestión Premium</p>
+                <p class="text-xs color-secondary font-weight-500">© 2025 Rubi perfumeria · Fragancias de Alta Gama</p>
             </div>
         </div>
     </footer>
