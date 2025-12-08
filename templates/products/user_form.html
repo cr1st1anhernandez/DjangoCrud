@@ -2,49 +2,166 @@
 
 {% block title %}Crear Usuario{% endblock %}
 
-{% block content %}
-<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
-    <h1 class="text-3xl font-bold text-gray-900 mb-6">Crear Nuevo Usuario</h1>
+{% block extra_styles %}{% endblock %}
 
-    <form method="POST" class="space-y-4">
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="mb-12">
+        <h1 class="editorial-title mb-3">
+            Nuevo Usuario
+        </h1>
+        <p class="text-base color-secondary" style="letter-spacing: 0.5px;">
+            Crea una cuenta de usuario para el sistema
+        </p>
+    </div>
+
+    <!-- Form -->
+    <form method="POST" class="minimal-card-no-hover p-10">
         {% csrf_token %}
 
-        <div>
-            <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Nombre de Usuario</label>
-            <input type="text" name="username" id="username" required
-                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <!-- Información del Usuario -->
+        <div class="form-section">
+            <h2 class="form-section-title">
+                Información del Usuario
+            </h2>
+
+            <div class="space-y-6">
+                <div>
+                    <label for="username">
+                        Nombre de Usuario <span style="color: var(--error-red);">*</span>
+                    </label>
+                    <input type="text" name="username" id="username" required
+                           placeholder="Ej: juan.perez"
+                           class="input-field">
+                    <span class="error-message" id="username-error">Este campo es obligatorio</span>
+                </div>
+
+                <div>
+                    <label for="email">
+                        Correo Electrónico <span style="color: var(--error-red);">*</span>
+                    </label>
+                    <input type="email" name="email" id="email" required
+                           placeholder="ejemplo@correo.com"
+                           class="input-field">
+                    <span class="error-message" id="email-error">Este campo es obligatorio</span>
+                </div>
+
+                <div>
+                    <label for="password">
+                        Contraseña <span style="color: var(--error-red);">*</span>
+                    </label>
+                    <input type="password" name="password" id="password" required
+                           placeholder="Ingrese una contraseña segura"
+                           class="input-field">
+                    <span class="error-message" id="password-error">Este campo es obligatorio</span>
+                </div>
+            </div>
         </div>
 
-        <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input type="email" name="email" id="email" required
-                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <!-- Permisos -->
+        <div class="mb-12">
+            <h2 class="form-section-title">
+                Permisos y Roles
+            </h2>
+
+            <div class="flex items-center p-6 rounded bg-ivory border border-beige">
+                <input type="checkbox" name="is_admin" id="is_admin"
+                       class="h-5 w-5 rounded cursor-pointer color-accent">
+                <label for="is_admin" class="ml-4 cursor-pointer" style="margin-bottom: 0; text-transform: none; letter-spacing: normal;">
+                    <span class="block text-sm font-semibold color-primary">
+                        Administrador del Sistema
+                    </span>
+                    <span class="block text-xs mt-1 color-secondary">
+                        Acceso completo para gestionar productos, usuarios y configuración
+                    </span>
+                </label>
+            </div>
         </div>
 
-        <div>
-            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contrasena</label>
-            <input type="password" name="password" id="password" required
-                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-
-        <div class="flex items-center">
-            <input type="checkbox" name="is_admin" id="is_admin"
-                   class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-            <label for="is_admin" class="ml-2 block text-sm text-gray-900">
-                Es Administrador
-            </label>
-        </div>
-
-        <div class="flex space-x-4 pt-4">
+        <!-- Botones -->
+        <div class="pt-8 space-y-4 border-t border-beige">
             <button type="submit"
-                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium">
+                    class="minimal-btn btn-primary w-full px-6 py-4 rounded text-lg">
                 Crear Usuario
             </button>
             <a href="{% url 'user_list' %}"
-               class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md font-medium text-center">
+               class="minimal-btn btn-secondary w-full px-6 py-3 rounded text-center block">
                 Cancelar
             </a>
         </div>
+
+        <p class="text-xs text-center mt-6 color-secondary" style="letter-spacing: 0.5px;">
+            <span style="color: var(--error-red);">*</span> Campos obligatorios
+        </p>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Obtener todos los campos requeridos
+    const requiredFields = document.querySelectorAll('[required]');
+
+    requiredFields.forEach(function(field) {
+        // Validación al perder el foco (blur)
+        field.addEventListener('blur', function() {
+            validateField(this);
+        });
+
+        // Limpiar error al empezar a escribir/seleccionar
+        field.addEventListener('input', function() {
+            clearError(this);
+        });
+    });
+
+    function validateField(field) {
+        const fieldId = field.id;
+        const errorMessage = document.getElementById(fieldId + '-error');
+
+        if (!errorMessage) return;
+
+        // Verificar si el campo está vacío
+        const isEmpty = field.value.trim() === '';
+
+        if (isEmpty) {
+            field.classList.add('field-error');
+            errorMessage.classList.add('show');
+        }
+    }
+
+    function clearError(field) {
+        const fieldId = field.id;
+        const errorMessage = document.getElementById(fieldId + '-error');
+
+        if (!errorMessage) return;
+
+        // Verificar si el campo tiene valor
+        const hasValue = field.value.trim() !== '';
+
+        if (hasValue) {
+            field.classList.remove('field-error');
+            errorMessage.classList.remove('show');
+        }
+    }
+
+    // Validar todos los campos al intentar enviar el formulario
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        let hasErrors = false;
+
+        requiredFields.forEach(function(field) {
+            validateField(field);
+
+            if (field.classList.contains('field-error')) {
+                hasErrors = true;
+            }
+        });
+
+        if (hasErrors) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+});
+</script>
 {% endblock %}

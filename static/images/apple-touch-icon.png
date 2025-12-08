@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- Fondo con gradiente -->
+  <defs>
+    <linearGradient id="perfumeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E8DCC4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C9A961;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Círculo de fondo -->
+  <circle cx="24" cy="24" r="24" fill="url(#perfumeGradient)"/>
+
+  <!-- Icono de perfume -->
+  <g stroke="#FFFFFF" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Tapa del perfume -->
+    <rect x="16" y="8" width="16" height="6" rx="1"/>
+    <line x1="18" y1="8" x2="18" y2="11"/>
+    <line x1="24" y1="8" x2="24" y2="11"/>
+    <line x1="30" y1="8" x2="30" y2="11"/>
+
+    <!-- Botella del perfume -->
+    <path d="M14 38 C14 38, 14 22, 14 22 L34 22 C34 22, 34 38, 34 38 C34 40, 32 42, 30 42 L18 42 C16 42, 14 40, 14 38 Z"/>
+
+    <!-- Detalles decorativos -->
+    <line x1="18" y1="16" x2="18" y2="22" opacity="0.8"/>
+    <line x1="24" y1="16" x2="24" y2="22" opacity="0.8"/>
+    <line x1="30" y1="16" x2="30" y2="22" opacity="0.8"/>
+
+    <!-- Cuello de la botella -->
+    <rect x="18" y="14" width="12" height="8"/>
+
+    <!-- Líquido -->
+    <ellipse cx="24" cy="30" rx="4" ry="8" opacity="0.4" fill="#FFFFFF"/>
+  </g>
+</svg>

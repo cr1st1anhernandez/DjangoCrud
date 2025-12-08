@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Rubi perfumeria</title>
+
+    <!-- Favicons -->
+    {% load static %}
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
+    <link rel="alternate icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/apple-touch-icon.png' %}">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -131,6 +138,24 @@
         .notification-exit {
             animation: slideOutRight 0.3s ease-in;
         }
+
+        .field-error {
+            border-color: #DC2626 !important;
+            border-width: 2px !important;
+        }
+
+        .error-message {
+            color: #DC2626;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -183,8 +208,9 @@
         <div class="text-center mb-12">
             <div class="flex justify-center mb-6">
                 <div class="w-20 h-20 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, var(--beige) 0%, var(--gold-accent) 100%);">
-                    <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z"/>
+                    <svg class="w-11 h-11 text-white" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 7h6m-6 4h6m-6 4h6M6 19h12a2 2 0 002-2V9a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2zM8 3h8v4H8V3z"/>
+                        <ellipse cx="12" cy="13" rx="1.5" ry="3" opacity="0.6"/>
                     </svg>
                 </div>
             </div>
@@ -224,6 +250,7 @@
                         class="input-field w-full px-4 py-3 rounded text-base"
                         style="color: var(--charcoal);"
                         placeholder="Ingrese su usuario">
+                    <span class="error-message" id="username-error">Este campo es obligatorio</span>
                 </div>
 
                 <!-- Contraseña -->
@@ -240,6 +267,7 @@
                         class="input-field w-full px-4 py-3 rounded text-base"
                         style="color: var(--charcoal);"
                         placeholder="Ingrese su contraseña">
+                    <span class="error-message" id="password-error">Este campo es obligatorio</span>
                 </div>
 
                 <!-- Botón Submit -->
@@ -273,6 +301,72 @@
                 }, 300);
             });
         }, 5000);
+
+        // Validaciones de formulario
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obtener todos los campos requeridos
+            const requiredFields = document.querySelectorAll('[required]');
+
+            requiredFields.forEach(function(field) {
+                // Validación al perder el foco (blur)
+                field.addEventListener('blur', function() {
+                    validateField(this);
+                });
+
+                // Limpiar error al empezar a escribir
+                field.addEventListener('input', function() {
+                    clearError(this);
+                });
+            });
+
+            function validateField(field) {
+                const fieldId = field.id;
+                const errorMessage = document.getElementById(fieldId + '-error');
+
+                if (!errorMessage) return;
+
+                // Verificar si el campo está vacío
+                const isEmpty = field.value.trim() === '';
+
+                if (isEmpty) {
+                    field.classList.add('field-error');
+                    errorMessage.classList.add('show');
+                }
+            }
+
+            function clearError(field) {
+                const fieldId = field.id;
+                const errorMessage = document.getElementById(fieldId + '-error');
+
+                if (!errorMessage) return;
+
+                // Verificar si el campo tiene valor
+                const hasValue = field.value.trim() !== '';
+
+                if (hasValue) {
+                    field.classList.remove('field-error');
+                    errorMessage.classList.remove('show');
+                }
+            }
+
+            // Validar todos los campos al intentar enviar el formulario
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                let hasErrors = false;
+
+                requiredFields.forEach(function(field) {
+                    validateField(field);
+
+                    if (field.classList.contains('field-error')) {
+                        hasErrors = true;
+                    }
+                });
+
+                if (hasErrors) {
+                    e.preventDefault();
+                }
+            });
+        });
     </script>
 </body>
 </html>

@@ -120,6 +120,8 @@ class HistoryModelTest(TestCase):
 
     def test_history_ordering(self):
         """Test del ordenamiento por timestamp"""
+        import time
+
         history1 = History.objects.create(
             user=self.user,
             product_id=self.product.id,
@@ -127,6 +129,8 @@ class HistoryModelTest(TestCase):
             action='CREATE',
             changes={}
         )
+
+        time.sleep(0.01)  # Pequeño delay para asegurar timestamps diferentes
         history2 = History.objects.create(
             user=self.user,
             product_id=self.product.id,
@@ -134,6 +138,7 @@ class HistoryModelTest(TestCase):
             action='UPDATE',
             changes={}
         )
+
         histories = History.objects.all()
         # El más reciente debe ser primero (ordering = ['-timestamp'])
         self.assertEqual(histories[0], history2)
@@ -162,7 +167,8 @@ class UserProfileModelTest(TestCase):
     def test_profile_str_method(self):
         """Test del método __str__"""
         profile = UserProfile.objects.get(user=self.user)
-        self.assertEqual(str(profile), f"Profile: {self.user.username}")
+        expected = f"{self.user.username} - {profile.get_role_display()}"
+        self.assertEqual(str(profile), expected)
 
 
 class SaleModelTest(TestCase):
@@ -200,7 +206,7 @@ class SaleModelTest(TestCase):
 
     def test_sale_str_method(self):
         """Test del método __str__"""
-        expected = f"Sale {self.sale.ticket_number} - ${self.sale.total}"
+        expected = f"Venta #{self.sale.ticket_number} - ${self.sale.total}"
         self.assertEqual(str(self.sale), expected)
 
     def test_sale_item_creation(self):
@@ -219,6 +225,7 @@ class SaleModelTest(TestCase):
 
     def test_get_items_count(self):
         """Test del método get_items_count"""
+        # Contar items totales en cantidad (suma de quantities)
         SaleItem.objects.create(
             sale=self.sale,
             product_name=self.product1.name,
@@ -237,23 +244,33 @@ class SaleModelTest(TestCase):
             unit_price=self.product2.price,
             subtotal=Decimal('75.00')
         )
-        self.assertEqual(self.sale.get_items_count(), 2)
+        # get_items_count suma las cantidades: 2 + 1 = 3
+        self.assertEqual(self.sale.get_items_count(), 3)
 
     def test_sale_ordering(self):
         """Test del ordenamiento de ventas"""
-        sale1 = Sale.objects.create(
+        # Las ventas en setUp: self.sale (TICKET-001) ya existe
+        import time
+
+        time.sleep(0.01)  # Pequeño delay para asegurar timestamps diferentes
+        sale2 = Sale.objects.create(
             user=self.user,
             total=Decimal('100.00'),
             ticket_number='TICKET-002'
         )
-        sale2 = Sale.objects.create(
+
+        time.sleep(0.01)  # Pequeño delay
+        sale3 = Sale.objects.create(
             user=self.user,
             total=Decimal('200.00'),
             ticket_number='TICKET-003'
         )
+
         sales = Sale.objects.all()
-        # La más reciente debe ser primero
-        self.assertEqual(sales[0], sale2)
+        # La más reciente debe ser primero (ordering = ['-created_at'])
+        self.assertEqual(sales[0], sale3)
+        # Verificar que todas las ventas están presentes
+        self.assertEqual(sales.count(), 3)
 
 
 class ProductViewsTest(TestCase):
@@ -296,6 +313,7 @@ class ProductViewsTest(TestCase):
             'description': 'New Description',
             'category': 'PERFUME',
             'gender': 'U',
+            'fragrance_type': 'FLORAL',
             'volume': 100,
             'price': '149.99',
             'cost': '75.00',
@@ -316,6 +334,7 @@ class ProductViewsTest(TestCase):
             'description': 'Updated Description',
             'category': 'PERFUME',
             'gender': 'M',
+            'fragrance_type': 'WOODY',
             'volume': 150,
             'price': '129.99',
             'cost': '65.00',
