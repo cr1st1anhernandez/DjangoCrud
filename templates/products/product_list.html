@@ -100,21 +100,21 @@
         <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
             <div>
                 <label for="price_min" class="block text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">Precio Mínimo</label>
-                <input type="number" name="price_min" id="price_min" step="0.01" value="{{ request.GET.price_min }}"
+                <input type="number" name="price_min" id="price_min" step="0.01" min="0" value="{{ request.GET.price_min }}"
                        placeholder="$0.00"
                        class="w-full px-4 py-3 rounded border text-sm" style="border-color: var(--beige); background-color: white; color: var(--charcoal);">
             </div>
 
             <div>
                 <label for="price_max" class="block text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">Precio Máximo</label>
-                <input type="number" name="price_max" id="price_max" step="0.01" value="{{ request.GET.price_max }}"
+                <input type="number" name="price_max" id="price_max" step="0.01" min="0" value="{{ request.GET.price_max }}"
                        placeholder="$999999"
                        class="w-full px-4 py-3 rounded border text-sm" style="border-color: var(--beige); background-color: white; color: var(--charcoal);">
             </div>
 
             <div>
                 <label for="quantity_min" class="block text-xs font-medium mb-3" style="color: var(--soft-gray); letter-spacing: 1.5px; text-transform: uppercase;">Stock Mínimo</label>
-                <input type="number" name="quantity_min" id="quantity_min" value="{{ request.GET.quantity_min }}"
+                <input type="number" name="quantity_min" id="quantity_min" min="0" value="{{ request.GET.quantity_min }}"
                        placeholder="0"
                        class="w-full px-4 py-3 rounded border text-sm" style="border-color: var(--beige); background-color: white; color: var(--charcoal);">
             </div>
@@ -298,5 +298,42 @@
     {% endif %}
 </div>
 {% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Prevenir entrada de números negativos en campos de filtro numéricos
+    const numericFilterFields = ['price_min', 'price_max', 'quantity_min'];
+
+    numericFilterFields.forEach(function(fieldId) {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            // Prevenir teclas de signo negativo y 'e' (notación científica)
+            field.addEventListener('keydown', function(e) {
+                if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+') {
+                    e.preventDefault();
+                }
+            });
+
+            // Validar el valor cuando cambia
+            field.addEventListener('input', function(e) {
+                // Si el valor es negativo, establecerlo a vacío
+                if (parseFloat(this.value) < 0) {
+                    this.value = '';
+                }
+            });
+
+            // Validar al salir del campo
+            field.addEventListener('blur', function(e) {
+                const currentValue = parseFloat(this.value);
+
+                // Si es negativo, establecerlo a vacío
+                if (!isNaN(currentValue) && currentValue < 0) {
+                    this.value = '';
+                }
+            });
+        }
+    });
+});
+</script>
 
 {% endblock %}

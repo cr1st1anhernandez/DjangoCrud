@@ -17,6 +17,410 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
+    <style>
+        /* ========================================
+           RUBI PERFUMERIA - ESTILOS GLOBALES
+           ======================================== */
+
+        /* Variables CSS */
+        :root {
+            --cream: #FAF7F2;
+            --beige: #E8DCC4;
+            --ivory: #EAE0CC;
+            --soft-brown: #8B7355;
+            --dark-brown: #5C4A3A;
+            --gold-accent: #C9A961;
+            --soft-gray: #6B6B6B;
+            --charcoal: #3D3D3D;
+            --error-red: #DC2626;
+        }
+
+        /* ========================================
+           TIPOGRAFÍA
+           ======================================== */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: var(--charcoal);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .editorial-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            line-height: 1.2;
+            color: var(--dark-brown);
+        }
+
+        /* ========================================
+           COMPONENTES
+           ======================================== */
+
+        /* Botones */
+        .minimal-btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .minimal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(92, 74, 58, 0.15);
+        }
+
+        .btn-primary {
+            background-color: var(--soft-brown);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--ivory);
+            color: var(--dark-brown);
+            border: 1px solid var(--beige);
+        }
+
+        .btn-danger {
+            background-color: transparent;
+            color: var(--error-red);
+            border: 1px solid var(--error-red);
+        }
+
+        .btn-danger:hover {
+            background-color: var(--error-red);
+            color: white;
+        }
+
+        /* Cards */
+        .minimal-card {
+            background: white;
+            border-radius: 2px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(232, 220, 196, 0.3);
+        }
+
+        .minimal-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(92, 74, 58, 0.12);
+            border-color: var(--gold-accent);
+        }
+
+        .minimal-card-no-hover {
+            background: white;
+            border-radius: 2px;
+            border: 1px solid rgba(232, 220, 196, 0.3);
+        }
+
+        /* ========================================
+           NAVEGACIÓN
+           ======================================== */
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            color: var(--dark-brown);
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 1px;
+            background: var(--gold-accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--gold-accent);
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        /* ========================================
+           FORMULARIOS
+           ======================================== */
+        .input-field {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--beige);
+            background-color: white;
+            color: var(--charcoal);
+            border-radius: 0.25rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.1);
+        }
+
+        .input-field::placeholder {
+            color: var(--soft-gray);
+            opacity: 0.5;
+        }
+
+        label {
+            display: block;
+            color: var(--soft-gray);
+            font-weight: 600;
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Validaciones */
+        .field-error {
+            border-color: var(--error-red) !important;
+            border-width: 2px !important;
+        }
+
+        .error-message {
+            color: var(--error-red);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* ========================================
+           NOTIFICACIONES
+           ======================================== */
+        .notification-enter {
+            animation: slideInRight 0.4s ease-out;
+        }
+
+        .notification-exit {
+            animation: slideOutRight 0.3s ease-in;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* ========================================
+           ANIMACIONES
+           ======================================== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* ========================================
+           UTILIDADES
+           ======================================== */
+        .text-balance {
+            text-wrap: balance;
+        }
+
+        .color-primary {
+            color: var(--dark-brown);
+        }
+
+        .color-secondary {
+            color: var(--soft-gray);
+        }
+
+        .color-accent {
+            color: var(--gold-accent);
+        }
+
+        .bg-ivory {
+            background-color: var(--ivory);
+        }
+
+        .bg-cream {
+            background-color: var(--cream);
+        }
+
+        .border-beige {
+            border-color: var(--beige);
+        }
+
+        .avatar-gradient {
+            background: linear-gradient(135deg, var(--beige) 0%, var(--gold-accent) 100%);
+        }
+
+        /* ========================================
+           BADGES Y ETIQUETAS
+           ======================================== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .badge-admin {
+            background-color: var(--gold-accent);
+            color: white;
+        }
+
+        .badge-seller {
+            background-color: var(--soft-brown);
+            color: white;
+        }
+
+        .badge-user {
+            background-color: var(--soft-brown);
+            color: white;
+        }
+
+        /* ========================================
+           SECCIONES DE FORMULARIOS
+           ======================================== */
+        .form-section {
+            margin-bottom: 3rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid var(--beige);
+        }
+
+        .form-section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--dark-brown);
+            margin-bottom: 2rem;
+        }
+
+        /* ========================================
+           TABLAS Y LISTAS
+           ======================================== */
+        .table-header {
+            padding: 1.5rem 2rem;
+            background-color: var(--ivory);
+            border-bottom: 1px solid var(--beige);
+        }
+
+        .table-header-text {
+            color: var(--soft-gray);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .table-row {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--beige);
+            transition: background-color 0.3s ease;
+        }
+
+        .table-row:hover {
+            background-color: var(--cream);
+        }
+
+        /* ========================================
+           AVATARES
+           ======================================== */
+        .avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .avatar-sm {
+            width: 3rem;
+            height: 3rem;
+            font-size: 1.125rem;
+        }
+
+        .avatar-md {
+            width: 5rem;
+            height: 5rem;
+            font-size: 1.5rem;
+        }
+
+        .avatar-lg {
+            width: 6rem;
+            height: 6rem;
+            font-size: 2rem;
+        }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+        @media (max-width: 768px) {
+            .editorial-title {
+                font-size: 2rem;
+            }
+
+            .table-header,
+            .table-row {
+                padding: 1rem;
+            }
+        }
+    </style>
+
     {% block extra_styles %}{% endblock %}
 </head>
 <body class="min-h-screen">
