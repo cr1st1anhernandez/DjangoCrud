@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.validators import MinValueValidator
 import json
 
 class Product(models.Model):
@@ -48,13 +49,13 @@ class Product(models.Model):
     fragrance_type = models.CharField(max_length=20, choices=FRAGRANCE_CHOICES, verbose_name="Tipo de Fragancia", blank=True)
 
     # Presentación
-    volume = models.IntegerField(verbose_name="Volumen (ml)", help_text="Volumen en mililitros", default=100)
+    volume = models.IntegerField(verbose_name="Volumen (ml)", help_text="Volumen en mililitros", default=100, validators=[MinValueValidator(1, message="El volumen debe ser mayor a 0")])
 
     # Inventario y precios
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio")
-    cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Costo", default=0, help_text="Costo de adquisición")
-    quantity = models.IntegerField(verbose_name="Cantidad en Stock")
-    min_stock = models.IntegerField(verbose_name="Stock Mínimo", default=5, help_text="Alerta cuando el stock sea menor o igual a este valor")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio", validators=[MinValueValidator(0, message="El precio no puede ser negativo")])
+    cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Costo", default=0, help_text="Costo de adquisición", validators=[MinValueValidator(0, message="El costo no puede ser negativo")])
+    quantity = models.IntegerField(verbose_name="Cantidad en Stock", validators=[MinValueValidator(0, message="La cantidad no puede ser negativa")])
+    min_stock = models.IntegerField(verbose_name="Stock Mínimo", default=5, help_text="Alerta cuando el stock sea menor o igual a este valor", validators=[MinValueValidator(0, message="El stock mínimo no puede ser negativo")])
 
     # Identificadores
     sku = models.CharField(max_length=100, unique=True, verbose_name="SKU")
